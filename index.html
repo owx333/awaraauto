@@ -3,12 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>AWARA · AUTOMATION LOAN SYSTEM</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
-  <rect width='100' height='100' fill='%2300C2C2'/>
-  <text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='Arial'>A</text>
-</svg>">
+<title>AWARA · Loan Eligibility</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geist:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -45,7 +40,7 @@
     --txt-light-2:#d4d9e8;
     --txt-light-3:#a5adc2;
     /* PRIMARY ACCENT: Sunset Orange (button color, replaces gold) */
-    --gold:#075e35;
+    --gold:#F97316;
     --gold-2:#fb8a3f;
     --gold-bright:#fb8a3f;
     --gold-soft:#fdb88a;
@@ -241,7 +236,7 @@
   .res-cell.hl .res-tag{color:var(--orange)}
   .res-tag{font-family:var(--mono);font-size:.82rem;color:var(--text-primary);letter-spacing:.2em;margin-bottom:.75rem;font-weight:800}
   .res-formula{font-family:var(--mono);font-size:.72rem;color:#000000;margin-bottom:1rem;letter-spacing:.04em;font-weight:500}
-  .res-val{font-family:var(--mono);font-size:1.55rem;font-weight:700;color:#F97316;line-height:1.15;letter-spacing:-.01em}
+  .res-val{font-family:var(--mono);font-size:1.55rem;font-weight:700;color:#fff;line-height:1.15;letter-spacing:-.01em}
   .res-val.neg{color:var(--red)}
   .res-unit{font-size:.72rem;color:var(--orange);letter-spacing:.22em;text-transform:uppercase;margin-top:.55rem;font-weight:700}
 
@@ -415,6 +410,41 @@
   input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
   input[type=number]{-moz-appearance:textfield}
 
+
+  /* PACKAGE TAB */
+  .pkg-filter{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
+  .pkg-fbtn{padding:.55rem 1rem;background:#ffffff;border:1.5px solid var(--line);color:var(--text-secondary);font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;border-radius:8px;cursor:pointer;transition:all .15s}
+  .pkg-fbtn:hover{border-color:var(--orange);color:var(--orange)}
+  .pkg-fbtn.active{background:var(--orange);color:#ffffff;border-color:var(--orange);box-shadow:0 2px 6px rgba(249,115,22,.25)}
+  .pkg-grid{display:flex;flex-direction:column;gap:.85rem}
+  .pkg-card{background:#ffffff;border:1px solid var(--line);border-radius:12px;padding:1.15rem 1.2rem;box-shadow:var(--shadow-card);transition:all .2s}
+  .pkg-card:hover{border-color:var(--orange);box-shadow:0 4px 14px rgba(249,115,22,.12)}
+  .pkg-card.hidden{display:none}
+  .pkg-card-head{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.5rem}
+  .pkg-title{font-family:var(--serif);font-size:1.35rem;font-weight:700;color:var(--text-primary);line-height:1}
+  .pkg-cat{font-family:var(--mono);font-size:.62rem;font-weight:700;padding:.3rem .6rem;border-radius:5px;letter-spacing:.15em}
+  .pkg-cat.normal{background:var(--green-bg);color:var(--green-deep);border:1px solid var(--green-bd)}
+  .pkg-cat.kontrak{background:var(--blue-bg);color:var(--info);border:1px solid var(--blue-bd)}
+  .pkg-cat.special{background:var(--pink-bg);color:var(--pink);border:1px solid var(--pink-bd)}
+  .pkg-koperasi{font-size:.78rem;color:var(--text-secondary);margin-bottom:.85rem;line-height:1.35;font-weight:500}
+  .pkg-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.85rem}
+  .pkg-stat{background:#fafaf3;padding:.55rem .6rem;border-radius:6px;border:1px solid var(--line-3);text-align:center}
+  .pkg-stat-lbl{font-family:var(--mono);font-size:.55rem;color:var(--text-muted);letter-spacing:.18em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:.18rem}
+  .pkg-stat-val{font-family:var(--mono);font-size:.92rem;color:var(--orange);font-weight:700}
+  .pkg-expand{width:100%;padding:.55rem;background:transparent;border:1px dashed var(--line);color:var(--text-secondary);font-family:var(--sans);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;border-radius:6px;cursor:pointer;transition:all .15s}
+  .pkg-expand:hover{border-color:var(--orange);color:var(--orange);background:#fff8f0}
+  .pkg-details{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--line);display:none}
+  .pkg-details.open{display:block}
+  .pkg-detail-row{display:grid;grid-template-columns:110px 1fr;gap:.5rem;padding:.4rem 0;font-size:.78rem;line-height:1.35;border-bottom:1px dashed var(--line-3)}
+  .pkg-detail-row:last-child{border-bottom:none}
+  .pkg-detail-lbl{color:var(--text-muted);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}
+  .pkg-detail-val{color:var(--text-primary);font-weight:500}
+  .pkg-detail-val em{font-style:normal;color:var(--orange);font-weight:600}
+  @media (max-width:520px){
+    .pkg-stats{grid-template-columns:1fr 1fr;gap:.4rem}
+    .pkg-detail-row{grid-template-columns:1fr;gap:.1rem}
+  }
+
   /* PRINT STYLES */
   @media print {
     body, html { background: #ffffff !important; }
@@ -434,7 +464,7 @@
   <div class="gate-inner">
     <div class="gate-mark">A</div>
     <div class="gate-brand">AWARA</div>
-    <div class="gate-sub">AUTOMATION GOAL SYSTEM</div>
+    <div class="gate-sub">Loan Eligibility · Restricted</div>
     <input type="password" class="gate-input" id="gateInput" placeholder="••••" maxlength="20" autocomplete="off" inputmode="numeric">
     <button class="gate-btn" id="gateBtn">Enter</button>
     <div class="gate-err" id="gateErr"></div>
@@ -447,12 +477,12 @@
       <div class="brand-mark">A</div>
       <div>
         <div class="brand">AWARA</div>
-        <div class="tagline">AUTOMATION LOAN SYSTEM · Created by Wilson</div>
+        <div class="tagline">Loan Eligibility · Created by Wilson</div>
       </div>
     </div>
     <div class="head-right">
       <div id="dt"></div>
-      <div class="v">v2.3 · AWARA</div>
+      <div class="v">v2.4 · AWARA</div>
     </div>
   </header>
 
@@ -462,6 +492,7 @@
     <button class="tab" data-tab="allowance"><span class="tab-icon">✓</span>Check Allowance</button>
     <button class="tab" data-tab="glc"><span class="tab-icon">★</span>Check GLC Majikan</button>
     <button class="tab" data-tab="code"><span class="tab-icon">#</span>Semak Angkasa Code</button>
+    <button class="tab" data-tab="package"><span class="tab-icon">★</span>Koperasi Package</button>
   </nav>
 
   <!-- ===== CALCULATOR PANEL ===== -->
@@ -841,9 +872,36 @@
     </div>
   </div>
 
+
+  <!-- ===== KOPERASI PACKAGE PANEL ===== -->
+  <div class="panel" id="panel-package">
+    <div class="check-intro">
+      <div class="check-intro-eyebrow">Loan Package Reference</div>
+      <div class="check-intro-title">Koperasi Package</div>
+      <div class="check-intro-sub">20 packages · NORMAL · KONTRAK · SPECIAL</div>
+    </div>
+
+    <div class="pkg-filter">
+      <button class="pkg-fbtn active" data-cat="all">All (20)</button>
+      <button class="pkg-fbtn" data-cat="NORMAL">Normal (6)</button>
+      <button class="pkg-fbtn" data-cat="KONTRAK">Kontrak (5)</button>
+      <button class="pkg-fbtn" data-cat="SPECIAL">Special (9)</button>
+    </div>
+
+    <div class="search-row">
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input type="text" class="search-input" id="pkgSearch" placeholder="Cari Title atau Koperasi..." autocomplete="off">
+        <button class="search-clear" id="pkgClear" title="Clear">×</button>
+      </div>
+    </div>
+
+    <div class="pkg-grid" id="pkgGrid"></div>
+  </div>
+
   <div class="foot">
-    <div><em>AWARA</em> · AUTOMATION LOAN SYSTEM Engine · v1.4 · <em>created by Wilson</em></div>
-    <div style="margin-top:.3rem;opacity:.7">Allowance list 05.05.2026 · GLC Majikan + Angkasa Code listing · Subject to employer confirmation</div>
+    <div><em>AWARA</em> · Loan Eligibility Engine · v1.4 · <em>created by Wilson</em></div>
+    <div style="margin-top:.3rem;opacity:.7">Allowance list 05.05.2026 · GLC + Angkasa Code + Loan Package listing · Subject to employer confirmation</div>
   </div>
 </div>
 
@@ -923,6 +981,7 @@
     });
 
     initOverlap();
+    initPackages();
     initCodeChecker();
 
     updateDT();
@@ -936,6 +995,7 @@
     if (name === 'allowance') setTimeout(() => document.getElementById('aInput').focus(), 100);
     if (name === 'glc') setTimeout(() => document.getElementById('gInput').focus(), 100);
     if (name === 'code') setTimeout(() => document.getElementById('cInput').focus(), 100);
+    if (name === 'package') setTimeout(() => document.getElementById('pkgSearch').focus(), 100);
     if (name === 'overlap') setTimeout(() => document.getElementById('oPendapatan').focus(), 100);
   }
 
@@ -2495,6 +2555,91 @@
       for (let i = 0; i < 2; i++) addOverlapLoan();
     }
     calcOverlap();
+  }
+
+  const PACKAGES = [{"Category": "NORMAL", "Title": "YTAA", "Koperasi": "YAYASAN TENGKU ABDUL AZIZ SULTAN ABU BAKAR", "Interest": "7.99%", "Payout": "70%", "Legal": "BELOW 50K / 100K INTEREST FUND", "AKPK": "ACCEPT 0", "Tahun": "10 TAHUN", "Pengesahan": "X", "AG_SG": "/", "Min_Loan": "", "Pencen": "", "Notes": "Extra Com: 1%"}, {"Category": "NORMAL", "Title": "KOMUJA", "Koperasi": "KOPERASI MUDA MAJU JAYA MALAYSIA BERHAD", "Interest": "7.99%", "Payout": "70%", "Legal": "CASE BY CASE", "AKPK": "/", "Tahun": "10 TAHUN", "Pengesahan": "SENDIRI CALL", "AG_SG": "/", "Min_Loan": "", "Pencen": "", "Notes": "Extra Com: 1%"}, {"Category": "NORMAL", "Title": "COSHARE", "Koperasi": "COSHARE", "Interest": "8%", "Payout": "70%", "Legal": "", "AKPK": "", "Tahun": "10 TAHUN", "Pengesahan": "BY KOPERARSI", "AG_SG": "GLC ONLY", "Min_Loan": "", "Pencen": "", "Notes": ""}, {"Category": "NORMAL", "Title": "EVERGREEN", "Koperasi": "EVERGREEN CREDIT", "Interest": "7.99%", "Payout": "75%", "Legal": "BELOW 50K", "AKPK": "DSR-100K", "Tahun": "10 TAHUN", "Pengesahan": "CASE BY CASE", "AG_SG": "SG CALL", "Min_Loan": "", "Pencen": "", "Notes": ""}, {"Category": "NORMAL", "Title": "KOBENA (JUARA PARTNER)", "Koperasi": "YAYASAN TEGUH IMAN", "Interest": "9.99%", "Payout": "77%", "Legal": "CASE BY CASE", "AKPK": "CASE BY CASE", "Tahun": "10 TAHUN", "Pengesahan": "AG/SG/GLC", "AG_SG": "NO ACCEPT POLIS, PENJARA, MAJLIS", "Min_Loan": "", "Pencen": "", "Notes": ""}, {"Category": "NORMAL", "Title": "PORTIERE (KADAR NIAGA)", "Koperasi": "PORTIERE CREDIT SDN BHD", "Interest": "6.99%", "Payout": "70%", "Legal": "BELOW 50K", "AKPK": "DSR-100K", "Tahun": "10 TAHUN", "Pengesahan": "CASE BY CASE", "AG_SG": "SG CALL", "Min_Loan": "", "Pencen": "", "Notes": ""}, {"Category": "KONTRAK", "Title": "EVERGREEN", "Koperasi": "EVERGREEN CREDIT", "Interest": "7.99%", "Payout": "70%", "Legal": "BELOW 80K", "AKPK": "DSR-100K", "Tahun": "10 TAHUN", "Pengesahan": "PENCEN MIN 58", "AG_SG": "AG ONLY", "Min_Loan": "", "Pencen": "", "Notes": "MAX LOAN 30K"}, {"Category": "KONTRAK", "Title": "YAYASAN PERLIS", "Koperasi": "Yayasan Dewan Perniagaan Melayu Perlis Berhad", "Interest": "6.65%", "Payout": "78-80%", "Legal": "BELOW 50K", "AKPK": "DSR-100K", "Tahun": "10 TAHUN", "Pengesahan": "1st KALI & SG CALL,", "AG_SG": "/", "Min_Loan": "", "Pencen": "", "Notes": "1st KENA ORI SIGN"}, {"Category": "KONTRAK", "Title": "KPRSB", "Koperasi": "KOPERASI PRESTASI BERHAD", "Interest": "9.99%", "Payout": "75% (MAX 20K)", "Legal": "CTOS 50K BELOW", "AKPK": "0", "Tahun": "MAX 5 TAHUN SAJA", "Pengesahan": "CASE BY CASE", "AG_SG": "AG ONLY", "Min_Loan": "", "Pencen": "", "Notes": "WORK MIN 3 MONTHS"}, {"Category": "KONTRAK", "Title": "KPRSB", "Koperasi": "KOPERASI PRESTASI BERHAD", "Interest": "6.99%", "Payout": "75%", "Legal": "CTOS 50K BELOW", "AKPK": "0", "Tahun": "10 TAHUN", "Pengesahan": "", "AG_SG": "AG & NON AG", "Min_Loan": "", "Pencen": "", "Notes": ""}, {"Category": "KONTRAK", "Title": "KOBESI", "Koperasi": "KOPERASI KOBESI MALAYSIA BERHAD", "Interest": "10%", "Payout": "75% (10K-50K)", "Legal": "CTOS 10K BELOW", "AKPK": "0", "Tahun": "10 TAHUN SAJA", "Pengesahan": "CASE BY CASE", "AG_SG": "NON AG/GLC ONLY", "Min_Loan": "", "Pencen": "", "Notes": "WORK MIN 3 MONTHS"}, {"Category": "SPECIAL", "Title": "KPPMB", "Koperasi": "KOPERASI PENGUSAHA PEKERJA MALAYSIA BERHAD", "Interest": "10%", "Payout": "50%", "Legal": "BELOW 50K", "AKPK": "0", "Tahun": "10", "Pengesahan": "X", "AG_SG": "AG ONLY", "Min_Loan": "RM15K", "Pencen": "58 / NO BELOW 10 TAHUN", "Notes": "Proses: 2 MINGGU; Gaji Bersih Min: 1000; Kelayakan: 85%; MAX ADD RM500"}, {"Category": "SPECIAL", "Title": "KOMAJU", "Koperasi": "KOPERASI MAJU JAYA BERHAD", "Interest": "10.99%", "Payout": "50% (KKM - MIN 10K- 15K)", "Legal": "BELOW 50K", "AKPK": "0", "Tahun": "10", "Pengesahan": "X", "AG_SG": "AG", "Min_Loan": "RM10K", "Pencen": "58 / NO BELOW 10 TAHUN", "Notes": "Proses: 1 BULAN - 3 BULAN; Gaji Bersih Min: 1000; Kelayakan: 85%"}, {"Category": "SPECIAL", "Title": "KOPRIMAS (30)", "Koperasi": "KOPERASI PERDANA NASIONAL MALAYSIA BERHAD", "Interest": "12%", "Payout": "50%", "Legal": "BELOW 50K", "AKPK": "0", "Tahun": "10 TAHUN", "Pengesahan": "X", "AG_SG": "AG/SG", "Min_Loan": "RM10K", "Pencen": "", "Notes": "Proses: 1 BULAN; Gaji Bersih Min: 1000; Kelayakan: 75%"}, {"Category": "SPECIAL", "Title": "KRIS", "Koperasi": "KOPERASI REZEKI IMPIAN SELANGOR", "Interest": "8.99%", "Payout": "50% (KKM TAK BOLEH)", "Legal": "BELOW 50K", "AKPK": "0", "Tahun": "10 TAHUN", "Pengesahan": "X", "AG_SG": "AG ONLY", "Min_Loan": "RM10K - RM30K", "Pencen": "2-10 TAHUN", "Notes": "Proses: 1 BULAN; Gaji Bersih Min: 800; Kelayakan: 85%"}, {"Category": "SPECIAL", "Title": "KOWARIS", "Koperasi": "KOPERASI WARISAN LEGASI MALAYSIA BERHAD", "Interest": "9.99%", "Payout": "50% (KKM SB& SRW X BOLEH)", "Legal": "BELOW 50K", "AKPK": "0", "Tahun": "10", "Pengesahan": "X", "AG_SG": "AG ONLY", "Min_Loan": "RM12K - RM30K", "Pencen": "NO BELOW 10 TAHUN", "Notes": "Proses: 1 BULAN; Gaji Bersih Min: 1000; Kelayakan: 75%"}, {"Category": "SPECIAL", "Title": "KOBESI", "Koperasi": "KOPERASI KOBESI MALAYSIA BERHAD", "Interest": "10%", "Payout": "50% (KKM MAX 10K)", "Legal": "BELOW 50K", "AKPK": "0", "Tahun": "10", "Pengesahan": "X", "AG_SG": "AG/SG", "Min_Loan": "RM10-30K", "Pencen": "58 / NO BELOW 10 TAHUN", "Notes": "Proses: 2 MINGGU; Gaji Bersih Min: 1000; Kelayakan: 85%"}, {"Category": "SPECIAL", "Title": "KOSPEM", "Koperasi": "KOPERASI SERBAGUNA PERKERJA-PERKERJA MALAYSIA BERHAD", "Interest": "12%", "Payout": "50% (KKM TAK BOLEH)", "Legal": "X", "AKPK": "X", "Tahun": "10", "Pengesahan": "X", "AG_SG": "AG/SG", "Min_Loan": "RM10K", "Pencen": "NO BELOW 10 TAHUN", "Notes": "Proses: 2 BULAN; Gaji Bersih Min: 800; Kelayakan: 85%; MAX ADD RM500"}, {"Category": "SPECIAL", "Title": "GIAT MAJU", "Koperasi": "KOPERASI GIAT MAJU BERHAD", "Interest": "9.5%", "Payout": "50%", "Legal": "BELOW 50K", "AKPK": "X", "Tahun": "7", "Pengesahan": "X", "AG_SG": "AG/SG", "Min_Loan": "RM10K", "Pencen": "7 TAHUN", "Notes": "Proses: 2  3 MINGGU; Gaji Bersih Min: 1000; Kelayakan: 85%; MAX ADD RM1500"}, {"Category": "SPECIAL", "Title": "PELADANG", "Koperasi": "Koperasi Peladang-peladang Profesional Malaysia", "Interest": "9.99%", "Payout": "50%", "Legal": "BELOW 50K", "AKPK": "X", "Tahun": "10 TAHUN", "Pengesahan": "X", "AG_SG": "SG", "Min_Loan": "RM10 - RM30K", "Pencen": "2-10 TAHUN", "Notes": "Proses: 2  3 MINGGU; Gaji Bersih Min: 800; Kelayakan: 75%; MAX ADD RM800"}];
+
+  function initPackages() {
+    const grid = document.getElementById('pkgGrid');
+    const search = document.getElementById('pkgSearch');
+    const clear = document.getElementById('pkgClear');
+    let currentCat = 'all';
+
+    function renderCard(p) {
+      const cat = p.Category.toLowerCase();
+      const details = [
+        ['Legal', p.Legal],
+        ['AKPK', p.AKPK],
+        ['Pengesahan', p.Pengesahan],
+        ['AG / SG', p.AG_SG],
+        ['Min Loan', p.Min_Loan],
+        ['Pencen', p.Pencen],
+        ['Notes', p.Notes]
+      ].filter(([_, v]) => v && v.trim());
+      const detailsHTML = details.map(([l, v]) =>
+        `<div class="pkg-detail-row"><span class="pkg-detail-lbl">${l}</span><span class="pkg-detail-val">${escapeHTML(v)}</span></div>`
+      ).join('');
+      return `
+        <div class="pkg-card" data-cat="${p.Category}">
+          <div class="pkg-card-head">
+            <div class="pkg-title">${escapeHTML(p.Title)}</div>
+            <div class="pkg-cat ${cat}">${p.Category}</div>
+          </div>
+          <div class="pkg-koperasi">${escapeHTML(p.Koperasi)}</div>
+          <div class="pkg-stats">
+            <div class="pkg-stat"><span class="pkg-stat-lbl">Interest</span><span class="pkg-stat-val">${escapeHTML(p.Interest||'-')}</span></div>
+            <div class="pkg-stat"><span class="pkg-stat-lbl">Payout</span><span class="pkg-stat-val">${escapeHTML(p.Payout||'-')}</span></div>
+            <div class="pkg-stat"><span class="pkg-stat-lbl">Tahun</span><span class="pkg-stat-val">${escapeHTML(p.Tahun||'-')}</span></div>
+          </div>
+          ${details.length ? '<button class="pkg-expand">Show Details ▾</button>' : ''}
+          <div class="pkg-details">${detailsHTML}</div>
+        </div>`;
+    }
+
+    function escapeHTML(s) {
+      return String(s).replace(/[&<>"'`]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c]));
+    }
+
+    function render() {
+      const q = search.value.trim().toUpperCase();
+      const cards = PACKAGES.filter(p => {
+        if (currentCat !== 'all' && p.Category !== currentCat) return false;
+        if (q && !((p.Title||'').toUpperCase().includes(q) || (p.Koperasi||'').toUpperCase().includes(q))) return false;
+        return true;
+      });
+      grid.innerHTML = cards.length ? cards.map(renderCard).join('') :
+        '<div class="cat-empty" style="padding:3rem 1rem;text-align:center;color:var(--text-muted);font-style:italic">Tiada package dijumpai</div>';
+      // Wire up expand buttons
+      grid.querySelectorAll('.pkg-expand').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const card = e.target.closest('.pkg-card');
+          const details = card.querySelector('.pkg-details');
+          const isOpen = details.classList.toggle('open');
+          btn.textContent = isOpen ? 'Hide Details ▴' : 'Show Details ▾';
+        });
+      });
+    }
+
+    document.querySelectorAll('.pkg-fbtn').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.pkg-fbtn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        currentCat = b.dataset.cat;
+        render();
+      });
+    });
+    search.addEventListener('input', () => {
+      clear.classList.toggle('show', search.value.length > 0);
+      render();
+    });
+    clear.addEventListener('click', () => {
+      search.value = '';
+      clear.classList.remove('show');
+      render();
+      search.focus();
+    });
+
+    render();
   }
 
   /* ============ KOPERASI CODE DATA ============ */
