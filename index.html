@@ -445,6 +445,18 @@
     .pkg-detail-row{grid-template-columns:1fr;gap:.1rem}
   }
 
+
+  /* SYNC STATUS BADGE */
+  .sync-status{display:inline-flex;align-items:center;gap:.35rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;padding:.3rem .55rem;border-radius:5px;margin-top:.4rem;font-weight:700;text-transform:uppercase}
+  .sync-status .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+  .sync-status.syncing{background:rgba(74,153,233,.18);color:#4A99E9;border:1px solid rgba(74,153,233,.4)}
+  .sync-status.syncing .dot{background:#4A99E9;animation:syncPulse 1s ease-in-out infinite}
+  .sync-status.synced{background:rgba(124,203,76,.18);color:#5fa835;border:1px solid rgba(124,203,76,.45)}
+  .sync-status.synced .dot{background:#5fa835}
+  .sync-status.offline{background:rgba(249,115,22,.18);color:#d35a0a;border:1px solid rgba(249,115,22,.4)}
+  .sync-status.offline .dot{background:#F97316}
+  @keyframes syncPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
   /* PRINT STYLES */
   @media print {
     body, html { background: #ffffff !important; }
@@ -482,7 +494,8 @@
     </div>
     <div class="head-right">
       <div id="dt"></div>
-      <div class="v">v2.4 · AWARA</div>
+      <div class="v">v2.5 · AWARA</div>
+        <div class="sync-status syncing" id="syncStatus"><span class="dot"></span>Loading...</div>
     </div>
   </header>
 
@@ -763,21 +776,21 @@
       <div class="cat approved">
         <div class="cat-head">
           <div><div class="cat-title approved">Approved</div><div class="cat-sub">Diterima</div></div>
-          <div class="cat-count"><span id="aCntApproved">49</span>/49</div>
+          <div class="cat-count"><span id="aCntApproved">49</span>/<span id="aTotApproved">49</span></div>
         </div>
         <div class="cat-list" id="aListApproved"></div>
       </div>
       <div class="cat case">
         <div class="cat-head">
           <div><div class="cat-title case">Case-to-Case</div><div class="cat-sub">Bergantung</div></div>
-          <div class="cat-count"><span id="aCntCase">43</span>/43</div>
+          <div class="cat-count"><span id="aCntCase">43</span>/<span id="aTotCase">43</span></div>
         </div>
         <div class="cat-list" id="aListCase"></div>
       </div>
       <div class="cat rejected">
         <div class="cat-head">
           <div><div class="cat-title rejected">Rejected</div><div class="cat-sub">Ditolak</div></div>
-          <div class="cat-count"><span id="aCntRejected">73</span>/73</div>
+          <div class="cat-count"><span id="aCntRejected">73</span>/<span id="aTotRejected">73</span></div>
         </div>
         <div class="cat-list" id="aListRejected"></div>
       </div>
@@ -815,21 +828,21 @@
       <div class="cat approved">
         <div class="cat-head">
           <div><div class="cat-title approved">Co-share / PGP</div><div class="cat-sub">Approved</div></div>
-          <div class="cat-count"><span id="gCntCoshare">98</span>/98</div>
+          <div class="cat-count"><span id="gCntCoshare">98</span>/<span id="gTotCoshare">98</span></div>
         </div>
         <div class="cat-list" id="gListCoshare"></div>
       </div>
       <div class="cat approved">
         <div class="cat-head">
           <div><div class="cat-title approved">Angkasa / BPA</div><div class="cat-sub">Approved</div></div>
-          <div class="cat-count"><span id="gCntAngkasa">665</span>/665</div>
+          <div class="cat-count"><span id="gCntAngkasa">665</span>/<span id="gTotAngkasa">665</span></div>
         </div>
         <div class="cat-list" id="gListAngkasa"></div>
       </div>
       <div class="cat rejected">
         <div class="cat-head">
           <div><div class="cat-title rejected">Rejected</div><div class="cat-sub">Tidak Diterima</div></div>
-          <div class="cat-count"><span id="gCntRejected">223</span>/223</div>
+          <div class="cat-count"><span id="gCntRejected">223</span>/<span id="gTotRejected">223</span></div>
         </div>
         <div class="cat-list" id="gListRejected"></div>
       </div>
@@ -983,6 +996,9 @@
     initOverlap();
     initPackages();
     initCodeChecker();
+
+    // Background sync from Google Sheets
+    syncFromGoogleSheets();
 
     updateDT();
     setInterval(updateDT, 60000);
@@ -1351,6 +1367,11 @@
     });
 
     render('');
+
+    // Expose for Google Sheets sync re-render
+    cfg.renderFn = render;
+    window._checkerCfgs = window._checkerCfgs || [];
+    window._checkerCfgs.push(cfg);
   }
 
   /* ============ ALLOWANCE DATA ============ */
@@ -2639,6 +2660,7 @@
       search.focus();
     });
 
+    window._renderPackages = render;
     render();
   }
 
@@ -3963,23 +3985,20 @@
     const banner = document.getElementById('cBanner');
     const results = document.getElementById('codeResults');
 
-    const codeKeys = Object.keys(CODES);
-    const allEntries = codeKeys.map(k => ({code: k, name: CODES[k]}));
-
     function searchCodes(q) {
       if (!q) return [];
       const qU = q.toUpperCase().trim();
       const qNorm = qU.replace(/[^A-Z0-9]/g, '');
 
-      // Exact code match first
       if (CODES[qU]) return [{code: qU, name: CODES[qU], exact: true}];
 
-      // Partial code match (code starts with query or contains)
+      // Build entries live from current CODES (so sync updates take effect)
+      const allEntries = Object.keys(CODES).map(k => ({code: k, name: CODES[k]}));
+
       const codeMatches = allEntries.filter(e =>
         e.code.startsWith(qNorm) || e.code.includes(qNorm)
       );
 
-      // Name match (all words of query appear in name)
       const qTokens = qU.split(/\s+/).filter(t => t.length >= 2);
       const nameMatches = qTokens.length > 0 ? allEntries.filter(e => {
         const nU = e.name.toUpperCase();
@@ -4085,6 +4104,143 @@
       doSearch();
       banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
+  }
+
+
+  /* ============ GOOGLE SHEETS SYNC ============ */
+  const SHEET_ID = '1YEEyy4uSDRn8EwnVVwtJFGJ-mrmus3qcArsWZT0tSaU';
+
+  function csvParse(text) {
+    const rows = [];
+    let row = [], field = '', q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) {
+        if (c === '"') {
+          if (text[i+1] === '"') { field += '"'; i++; }
+          else q = false;
+        } else field += c;
+      } else {
+        if (c === '"') q = true;
+        else if (c === ',') { row.push(field); field = ''; }
+        else if (c === '\n' || c === '\r') {
+          if (field.length || row.length > 0) { row.push(field); rows.push(row); row = []; field = ''; }
+          if (c === '\r' && text[i+1] === '\n') i++;
+        } else field += c;
+      }
+    }
+    if (field.length || row.length > 0) { row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function setSyncStatus(state, detail) {
+    const el = document.getElementById('syncStatus');
+    if (!el) return;
+    const now = new Date();
+    const time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    if (state === 'syncing') {
+      el.innerHTML = '<span class="dot"></span>Syncing...';
+      el.className = 'sync-status syncing';
+    } else if (state === 'synced') {
+      el.innerHTML = '<span class="dot"></span>Synced ' + time;
+      el.className = 'sync-status synced';
+      el.title = detail || '';
+    } else if (state === 'offline') {
+      el.innerHTML = '<span class="dot"></span>Offline · Cached';
+      el.className = 'sync-status offline';
+      el.title = detail || '';
+    }
+  }
+
+  async function syncFromGoogleSheets() {
+    setSyncStatus('syncing');
+    const url = (name) =>
+      'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
+      '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(name);
+
+    try {
+      const [allCSV, glcCSV, codeCSV, pkgCSV] = await Promise.all([
+        fetch(url('Allowance')).then(r => { if (!r.ok) throw new Error('Allowance HTTP '+r.status); return r.text(); }),
+        fetch(url('GLC')).then(r => { if (!r.ok) throw new Error('GLC HTTP '+r.status); return r.text(); }),
+        fetch(url('Koperasi')).then(r => { if (!r.ok) throw new Error('Koperasi HTTP '+r.status); return r.text(); }),
+        fetch(url('Package')).then(r => { if (!r.ok) throw new Error('Package HTTP '+r.status); return r.text(); }),
+      ]);
+
+      // Parse Allowance
+      const newAllow = { approved: [], case: [], rejected: [] };
+      csvParse(allCSV).slice(1).forEach(row => {
+        const name = (row[0]||'').trim();
+        const status = (row[1]||'').trim().toLowerCase();
+        if (name && status in newAllow) newAllow[status].push(name);
+      });
+
+      // Parse GLC
+      const newGLC = { coshare: [], angkasa: [], rejected: [] };
+      csvParse(glcCSV).slice(1).forEach(row => {
+        const name = (row[0]||'').trim();
+        const status = (row[1]||'').trim().toLowerCase();
+        if (name && status in newGLC) newGLC[status].push(name);
+      });
+
+      // Parse Koperasi
+      const newCodes = {};
+      csvParse(codeCSV).slice(1).forEach(row => {
+        const code = (row[0]||'').trim().toUpperCase();
+        const name = (row[1]||'').trim();
+        if (code && name) newCodes[code] = name;
+      });
+
+      // Parse Package
+      const pkgAll = csvParse(pkgCSV);
+      const pkgHeaders = pkgAll[0].map(h => (h||'').trim());
+      const newPkgs = pkgAll.slice(1).map(row => {
+        const obj = {};
+        pkgHeaders.forEach((h, i) => { obj[h] = (row[i]||'').trim(); });
+        return obj;
+      }).filter(p => p.Title && p.Category);
+
+      // Sanity check (refuse to apply if data is suspiciously small)
+      const aT = newAllow.approved.length + newAllow.case.length + newAllow.rejected.length;
+      const gT = newGLC.coshare.length + newGLC.angkasa.length + newGLC.rejected.length;
+      const cT = Object.keys(newCodes).length;
+      if (aT < 5 || gT < 5 || cT < 100 || newPkgs.length < 3) {
+        throw new Error('Data too small: A=' + aT + ' G=' + gT + ' C=' + cT + ' P=' + newPkgs.length);
+      }
+
+      // Mutate in-place
+      Object.keys(ALLOWANCES).forEach(k => { ALLOWANCES[k].length = 0; ALLOWANCES[k].push(...newAllow[k]); });
+      Object.keys(GLC).forEach(k => { GLC[k].length = 0; GLC[k].push(...newGLC[k]); });
+      Object.keys(CODES).forEach(k => delete CODES[k]);
+      Object.assign(CODES, newCodes);
+      PACKAGES.length = 0;
+      PACKAGES.push(...newPkgs);
+
+      // Update count badges (both current + total)
+      const set = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; };
+      set('aCntApproved', ALLOWANCES.approved.length); set('aTotApproved', ALLOWANCES.approved.length);
+      set('aCntCase', ALLOWANCES.case.length); set('aTotCase', ALLOWANCES.case.length);
+      set('aCntRejected', ALLOWANCES.rejected.length); set('aTotRejected', ALLOWANCES.rejected.length);
+      set('gCntCoshare', GLC.coshare.length); set('gTotCoshare', GLC.coshare.length);
+      set('gCntAngkasa', GLC.angkasa.length); set('gTotAngkasa', GLC.angkasa.length);
+      set('gCntRejected', GLC.rejected.length); set('gTotRejected', GLC.rejected.length);
+
+      // Re-render checkers (use current query if any)
+      if (window._checkerCfgs) {
+        window._checkerCfgs.forEach(cfg => {
+          if (cfg.renderFn) {
+            const inpEl = document.getElementById(cfg.prefix + 'Input');
+            const q = inpEl ? inpEl.value.trim() : '';
+            cfg.renderFn(q);
+          }
+        });
+      }
+      if (window._renderPackages) window._renderPackages();
+
+      setSyncStatus('synced', 'A:' + aT + ' G:' + gT + ' C:' + cT + ' P:' + newPkgs.length);
+    } catch (err) {
+      console.warn('Google Sheets sync failed:', err);
+      setSyncStatus('offline', String(err));
+    }
   }
 
   /* ============ AUTH CHECK (at end so all data is loaded first) ============ */
