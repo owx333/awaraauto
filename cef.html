@@ -304,23 +304,25 @@ function calc(){
   }
 
   /* MODE B */
-  const bulan=num('bulan');
-  if(bulan<=0||years<=0){body.innerHTML=ph();return;}
-  let maxLoan=maxLoanOf(k,bulan,years);
-  if(maxLoan<=0){body.innerHTML=topB(bulan,years)+flag('bad',T.bad,T.bad_d);return;}
-  maxLoan=Math.floor(maxLoan/100)*100;
-  const inst=monthlyOf(k,maxLoan,years);
-  body.innerHTML=`
-    <div class="big">
-      <div class="lbl">${T.r_maxloan}</div>
-      <div class="val">RM ${fmt0(maxLoan)}</div>
-      <div class="note">${k.name} · ${years} ${T.yr} · ${k.rate.toFixed(2)}%</div>
-    </div>
-    ${topB(bulan,years)}
-    ${row(T.l_inst,'RM '+fmt(inst)+' /'+T.mo)}
-    ${payoutLine(maxLoan,po)}
-    ${calibFlag}`;
+  if (mode === 'elig') {
+    const bulan=num('bulan');
+    if(bulan<=0||years<=0){body.innerHTML=ph();return;}
+    let maxLoan=maxLoanOf(k,bulan,years);
+    if(maxLoan<=0){body.innerHTML=topB(bulan,years)+flag('bad',T.bad,T.bad_d);return;}
+    maxLoan=Math.floor(maxLoan/100)*100;
+    const inst=monthlyOf(k,maxLoan,years);
+    body.innerHTML=`
+      <div class="big">
+        <div class="lbl">${T.r_maxloan}</div>
+        <div class="val">RM ${fmt0(maxLoan)}</div>
+        <div class="note">${k.name} · ${years} ${T.yr} · ${k.rate.toFixed(2)}%</div>
+      </div>
+      ${topB(bulan,years)}
+      ${row(T.l_inst,'RM '+fmt(inst)+' /'+T.mo)}
+      ${payoutLine(maxLoan,po)}
+      ${calibFlag}`;
     return;
+  }
 
   /* MODE C — Customer wants X cash → calculate required loan + monthly */
   const cash = num('cash');
