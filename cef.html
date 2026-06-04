@@ -106,6 +106,11 @@ footer .sig{color:var(--gold-soft);font-family:'Fraunces',serif;font-size:13px}
       <div class="t">Kira Kelayakan</div>
       <div class="d">Key-in bulanan → jumlah layak</div>
     </div>
+    <div class="tab" id="tab-cash" onclick="setMode('cash')">
+      <div class="n">MODE C</div>
+      <div class="t">Kira Duit Tangan</div>
+      <div class="d">Key-in duit tangan → loan + bulanan</div>
+    </div>
   </div>
 
   <div class="grid">
@@ -148,6 +153,16 @@ footer .sig{color:var(--gold-soft);font-family:'Fraunces',serif;font-size:13px}
           <span class="rm">RM</span>
           <input class="inp" id="bulan" type="number" inputmode="decimal" placeholder="460" oninput="calc()">
           <span class="hint">Amaun yang boleh ditolak sebulan.</span>
+        </div>
+      </div>
+
+      <!-- MODE C -->
+      <div id="inCash" style="display:none">
+        <div class="field prefix">
+          <label>Duit tangan yang klien nak</label>
+          <span class="rm">RM</span>
+          <input class="inp" id="cash" type="number" inputmode="decimal" placeholder="5000" oninput="calc()">
+          <span class="hint">Cash diterima = Loan × Payout%. Pastikan isi Payout % di atas.</span>
         </div>
       </div>
     </div>
@@ -194,11 +209,13 @@ const KOP = {
 /* ====================  END CONFIG  ==================== */
 
 const T = {
-  sub_monthly:"Ansuran bulanan", sub_elig:"Jumlah pembiayaan yang layak",
-  r_monthly:"Ansuran sebulan", r_maxloan:"Jumlah layak (anggaran)",
+  sub_monthly:"Ansuran bulanan", sub_elig:"Jumlah pembiayaan yang layak", sub_cash:"Loan diperlukan untuk duit tangan",
+  r_monthly:"Ansuran sebulan", r_maxloan:"Jumlah layak (anggaran)", r_reqloan:"Jumlah pembiayaan diperlukan",
   l_loan:"Jumlah pembiayaan", l_tenure:"Tempoh", l_rate:"Kadar (flat)",
   l_payout:"Anggaran pay-out (tunai)", l_avail:"Kelayakan bulanan", l_inst:"Cadangan ansuran sebulan",
+  l_cash_want:"Duit tangan diminta", l_cash_actual:"Cash sebenar diterima", l_monthly:"Ansuran bulanan",
   yr:"tahun", mo:"bulan", setpayout:"Isi Payout % untuk lihat tunai.",
+  needpayout:"Mode C perlukan Payout % untuk pengiraan loan.",
   ph:"Isi maklumat di sebelah untuk lihat keputusan.",
   calib:"Takaful dianggar", calib_d:"COSHARE = flat 8% + takaful RM21.20/bln (tepat utk pinjaman RM7k–40k, mana-mana tempoh). Pinjaman besar (>RM50k) & umur lain ada premium takaful berbeza — hantar Excel COSHARE (jadual takaful) untuk ketepatan penuh.",
   bad:"Tiada ruang", bad_d:"Bulanan terlalu rendah selepas caj — tiada jumlah layak."
@@ -253,8 +270,10 @@ function setMode(m){
   mode=m;
   $('tab-monthly').classList.toggle('on',m==='monthly');
   $('tab-elig').classList.toggle('on',m==='elig');
+  $('tab-cash').classList.toggle('on',m==='cash');
   $('inMonthly').style.display=m==='monthly'?'':'none';
   $('inElig').style.display=m==='elig'?'':'none';
+  $('inCash').style.display=m==='cash'?'':'none';
   calc();
 }
 
@@ -262,7 +281,7 @@ function calc(){
   const k=KOP[$('kop').value]; if(!k)return;
   const years=Math.floor(num('tenure'))||0;
   const po=num('payout');
-  $('resultSub').textContent = mode==='monthly'?T.sub_monthly:T.sub_elig;
+  $('resultSub').textContent = mode==='monthly'?T.sub_monthly:mode==='elig'?T.sub_elig:T.sub_cash;
   const body=$('resultBody');
   const calibFlag = k.note==='calib'?flag('warn',T.calib,T.calib_d):'';
 
@@ -300,6 +319,32 @@ function calc(){
     ${topB(bulan,years)}
     ${row(T.l_inst,'RM '+fmt(inst)+' /'+T.mo)}
     ${payoutLine(maxLoan,po)}
+    ${calibFlag}`;
+    return;
+
+  /* MODE C — Customer wants X cash → calculate required loan + monthly */
+  const cash = num('cash');
+  if (cash<=0 || years<=0) { body.innerHTML=ph(); return; }
+  if (po<=0) { 
+    body.innerHTML = flag('warn','Payout % diperlukan',T.needpayout);
+    return;
+  }
+  // LA = cash / (payout%/100), round up to nearest RM100 so client gets at least the cash
+  const exactLA = cash / (po/100);
+  const reqLA = Math.ceil(exactLA / 100) * 100;
+  const actualCash = reqLA * (po/100);
+  const bulanan = monthlyOf(k, reqLA, years);
+  body.innerHTML = `
+    <div class="big">
+      <div class="lbl">${T.r_reqloan}</div>
+      <div class="val">RM ${fmt0(reqLA)}</div>
+      <div class="note">${k.name} · ${k.code} · ${years} ${T.yr}</div>
+    </div>
+    ${rowEm(T.l_cash_want,'RM '+fmt(cash))}
+    ${rowEm(T.l_cash_actual+' ('+po+'%)','RM '+fmt(actualCash))}
+    ${row(T.l_monthly,'RM '+fmt(bulanan)+' /'+T.mo)}
+    ${row(T.l_tenure,years+' '+T.yr)}
+    ${row(T.l_rate,k.rate.toFixed(2)+'%')}
     ${calibFlag}`;
 }
 
