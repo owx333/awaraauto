@@ -789,7 +789,10 @@
   .status-name{color:#F0C419 !important;font-weight:800 !important;text-shadow:0 0 14px rgba(240,196,25,.55) !important}
   .code-row{background:#f8f9fb !important;border:1px solid #e2e8f4 !important}
   .code-row:hover{background:#eef1fa !important;border-color:rgba(48,209,88,.3) !important;transform:translateY(-2px)}
-  #chopResults .code-row-name{color:#1a1a2e !important}
+  /* Semak Angkasa Code list — white names on dark rows */
+  .code-row{background:rgba(255,255,255,.05) !important;border:1px solid rgba(255,255,255,.14) !important}
+  .code-row-name{color:#fff !important}
+  .code-row:hover{background:rgba(255,255,255,.1) !important}
   #chopResultInfo{color:#6b7a99 !important}
   .check-intro-title{color:#fff !important}
   .check-intro-sub{color:rgba(255,255,255,.55) !important}
@@ -1074,11 +1077,11 @@
   <nav class="tabs">
     <button class="tab active" data-tab="calc"><span class="tab-icon">$</span>Calculator</button>
     <button class="tab" data-tab="overlap"><span class="tab-icon">≋</span>Overlap</button>
+    <button class="tab" data-tab="cef"><span class="tab-icon">Σ</span>CEF</button>
     <button class="tab" data-tab="allowance"><span class="tab-icon">✓</span>Check Allowance</button>
     <button class="tab" data-tab="glc"><span class="tab-icon">★</span>Check GLC Majikan</button>
     <button class="tab" data-tab="code"><span class="tab-icon">#</span>Semak Angkasa Code</button>
     <button class="tab" data-tab="package"><span class="tab-icon">★</span>Koperasi Package</button>
-    <button class="tab" data-tab="cef"><span class="tab-icon">Σ</span>CEF</button>
     <button class="tab" data-tab="samplechop"><span class="tab-icon">✦</span>Sample Chop</button>
     <button class="tab" data-tab="stress"><span class="tab-icon">💥</span>Stress Buster</button>
   </nav>
@@ -4995,7 +4998,6 @@
     setTimeout(()=>{ overlay.style.display='none'; }, 3500);
   }
 
-  overlay?.addEventListener?.('click', ()=>{ document.getElementById('celebOverlay').style.display='none'; });
   document.getElementById('celebOverlay')?.addEventListener('click', ()=>{
     document.getElementById('celebOverlay').style.display='none';
   });
