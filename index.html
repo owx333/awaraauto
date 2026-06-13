@@ -107,7 +107,7 @@
   .gate-err{margin-top:1rem;font-size:.78rem;color:var(--red);min-height:1.2em}
 
   /* APP */
-  .app{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:1.75rem 1.25rem 4rem;display:none}
+  .app{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:1.75rem 2.5rem 4rem;display:none}
   .head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;padding:2.25rem 1.5rem 1.75rem;margin:-1.75rem -1.25rem 2rem;background:linear-gradient(135deg,#1C2541 0%,#28335a 50%,#1C2541 100%);border-bottom-left-radius:24px;border-bottom-right-radius:24px;box-shadow:0 12px 32px rgba(28,37,65,.25);position:relative;overflow:hidden;border-bottom:3px solid #F97316}
   .head::after{
     content:'';position:absolute;right:-50px;top:-50px;width:300px;height:300px;
@@ -653,119 +653,6 @@
     text-shadow:0 0 8px var(--neon-r)}
 
 
-  /* ============ RETRO MARQUEE SIGN ============ */
-  .marquee-sign{
-    position:relative;
-    width:340px;max-width:88vw;
-    aspect-ratio:2.3/1;
-    margin:0 auto 1.5rem;
-    background:linear-gradient(180deg,#e15a1b 0%,#c4471a 50%,#a83b16 100%);
-    border-radius:14px;
-    box-shadow:
-      0 0 0 4px #6b2e0e,
-      0 0 30px rgba(255,159,10,.4),
-      0 12px 40px rgba(0,0,0,.6),
-      inset 0 2px 10px rgba(255,255,255,.15),
-      inset 0 -3px 8px rgba(0,0,0,.3);
-    padding:24px;
-    overflow:visible;
-  }
-  /* Indent corners like reference image */
-  .marquee-sign::before{
-    content:'';position:absolute;
-    top:8px;left:8px;right:8px;bottom:8px;
-    border:2px solid rgba(0,0,0,.25);
-    border-radius:8px;
-    pointer-events:none;
-  }
-  .marquee-inner{
-    position:relative;
-    width:100%;height:100%;
-    display:flex;align-items:center;justify-content:center;
-    z-index:2;
-  }
-  .marquee-text{
-    display:flex;gap:.15em;
-    font-family:'Geist','Helvetica Neue',sans-serif;
-    font-weight:900;
-    font-size:clamp(2.4rem,9vw,3.6rem);
-    letter-spacing:.05em;
-    text-shadow:
-      0 2px 0 rgba(0,0,0,.4),
-      0 0 18px currentColor;
-  }
-  .ml{
-    display:inline-block;
-    animation:lettColorCycle 2.4s linear infinite;
-    animation-delay:calc(var(--ml-i) * 0.2s);
-    color:#ffd60a;
-  }
-  @keyframes lettColorCycle{
-    0%{color:#ff2d55;text-shadow:0 2px 0 rgba(0,0,0,.4),0 0 22px #ff2d55}
-    16%{color:#ff9f0a;text-shadow:0 2px 0 rgba(0,0,0,.4),0 0 22px #ff9f0a}
-    33%{color:#ffd60a;text-shadow:0 2px 0 rgba(0,0,0,.4),0 0 22px #ffd60a}
-    50%{color:#30d158;text-shadow:0 2px 0 rgba(0,0,0,.4),0 0 22px #30d158}
-    66%{color:#0a84ff;text-shadow:0 2px 0 rgba(0,0,0,.4),0 0 22px #0a84ff}
-    83%{color:#bf5af2;text-shadow:0 2px 0 rgba(0,0,0,.4),0 0 22px #bf5af2}
-    100%{color:#ff2d55;text-shadow:0 2px 0 rgba(0,0,0,.4),0 0 22px #ff2d55}
-  }
-
-  /* Marquee bulb strips around the border */
-  .marquee-bulbs{
-    position:absolute;display:flex;align-items:center;justify-content:space-around;
-    pointer-events:none;z-index:3;
-  }
-  .marquee-bulbs-top{top:-9px;left:14px;right:14px;height:18px}
-  .marquee-bulbs-bottom{bottom:-9px;left:14px;right:14px;height:18px}
-  .marquee-bulbs-left{left:-9px;top:14px;bottom:14px;width:18px;flex-direction:column}
-  .marquee-bulbs-right{right:-9px;top:14px;bottom:14px;width:18px;flex-direction:column}
-  .mb{
-    width:13px;height:13px;border-radius:50%;
-    background:#fff5d1;
-    box-shadow:
-      0 0 8px 2px #ffd97a,
-      0 0 16px 4px rgba(255,200,80,.5),
-      inset 0 -2px 4px rgba(180,100,0,.4),
-      inset 0 1px 2px rgba(255,255,255,.9);
-    animation:bulbRainbow 3s linear infinite;
-    flex-shrink:0;
-  }
-  @keyframes bulbRainbow{
-    0%{background:#ff6b6b;box-shadow:0 0 8px 2px #ff2d55,0 0 18px 5px rgba(255,45,85,.6),inset 0 -2px 4px rgba(120,0,20,.4),inset 0 1px 2px rgba(255,255,255,.7)}
-    16%{background:#ffb86b;box-shadow:0 0 8px 2px #ff9f0a,0 0 18px 5px rgba(255,159,10,.6),inset 0 -2px 4px rgba(140,60,0,.4),inset 0 1px 2px rgba(255,255,255,.7)}
-    33%{background:#fff36b;box-shadow:0 0 8px 2px #ffd60a,0 0 18px 5px rgba(255,214,10,.6),inset 0 -2px 4px rgba(150,110,0,.4),inset 0 1px 2px rgba(255,255,255,.7)}
-    50%{background:#6bff8a;box-shadow:0 0 8px 2px #30d158,0 0 18px 5px rgba(48,209,88,.6),inset 0 -2px 4px rgba(0,80,30,.4),inset 0 1px 2px rgba(255,255,255,.7)}
-    66%{background:#6bbcff;box-shadow:0 0 8px 2px #0a84ff,0 0 18px 5px rgba(10,132,255,.6),inset 0 -2px 4px rgba(0,40,120,.4),inset 0 1px 2px rgba(255,255,255,.7)}
-    83%{background:#cc6bff;box-shadow:0 0 8px 2px #bf5af2,0 0 18px 5px rgba(191,90,242,.6),inset 0 -2px 4px rgba(60,0,100,.4),inset 0 1px 2px rgba(255,255,255,.7)}
-    100%{background:#ff6b6b;box-shadow:0 0 8px 2px #ff2d55,0 0 18px 5px rgba(255,45,85,.6),inset 0 -2px 4px rgba(120,0,20,.4),inset 0 1px 2px rgba(255,255,255,.7)}
-  }
-
-  /* Floating balls on app background (post-login) */
-  .app-balls{
-    position:fixed;inset:0;
-    pointer-events:none;z-index:0;
-    overflow:hidden;
-  }
-  .app-ball{
-    position:absolute;
-    width:14px;height:14px;border-radius:50%;
-    bottom:-30px;
-    animation:floatBall linear infinite;
-    opacity:0;
-    filter:blur(.5px);
-  }
-  @keyframes floatBall{
-    0%{opacity:0;transform:translateY(0) translateX(0) scale(.4)}
-    10%{opacity:.7}
-    50%{transform:translateY(-50vh) translateX(20px) scale(1)}
-    90%{opacity:.4}
-    100%{opacity:0;transform:translateY(-105vh) translateX(-10px) scale(1.3)}
-  }
-
-  /* Hide old hk-char rules since we replaced markup */
-  .gate-hk-sign,.hk-char{display:none}
-  .gate-brand{display:none}
-
   /* Disco balls / floating particles */
   .disco-particle{
     position:absolute;border-radius:50%;pointer-events:none;
@@ -899,7 +786,7 @@
   .cat-item:hover{background:rgba(255,255,255,.12) !important;color:#fff !important}
   .pkg-card{background:#ffffff !important;border-color:#e2e8f4 !important;box-shadow:0 2px 8px rgba(0,0,0,.08) !important}
   .pkg-title{color:#1a1a2e !important}
-  .status-name{color:#1a1a2e !important}
+  .status-name{color:#F0C419 !important;font-weight:800 !important;text-shadow:0 0 14px rgba(240,196,25,.55) !important}
   .code-row{background:#f8f9fb !important;border:1px solid #e2e8f4 !important}
   .code-row:hover{background:#eef1fa !important;border-color:rgba(48,209,88,.3) !important;transform:translateY(-2px)}
   #chopResults .code-row-name{color:#1a1a2e !important}
@@ -1086,7 +973,12 @@
   .item-x{background:#f0f3fa !important;border-color:#d0d8e8 !important;color:#6b7a99 !important}
   .btn-add{background:#fff !important;border-color:rgba(255,159,10,.4) !important;color:rgba(180,90,0,.9) !important}
   .btn-add:hover{background:rgba(255,159,10,.08) !important;border-color:var(--neon-o) !important;border-style:solid !important}
-  .status-name{color:#1a1a2e !important}
+  .status-name{color:#F0C419 !important;font-weight:800 !important;text-shadow:0 0 14px rgba(240,196,25,.55) !important}
+  .status-label.approved{color:#7CCB4C !important;text-shadow:0 0 10px rgba(124,203,76,.5) !important}
+  .status-label.case{color:#F0C419 !important;text-shadow:0 0 10px rgba(240,196,25,.5) !important}
+  .status-label.rejected{color:#F66BA6 !important;text-shadow:0 0 10px rgba(246,107,166,.5) !important}
+  .status-label.notfound{color:#F0C419 !important}
+  .status-icon.case{background:rgba(240,196,25,.2) !important;color:#F0C419 !important;border:1px solid rgba(240,196,25,.5) !important}
   select.input option{background:#fff;color:#1a1a2e}
   #chopResults .code-row{background:rgba(255,255,255,.05) !important;border:1px solid rgba(255,255,255,.12) !important}
   #chopResults .code-row-code{box-shadow:0 2px 8px rgba(249,115,22,.4) !important;background:linear-gradient(135deg,#F97316,#ff6b00) !important;color:#fff !important;font-weight:800 !important}
@@ -1126,18 +1018,13 @@
 <div class="gate" id="gate">
   <div id="discoParticles" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
   <div class="gate-inner">
-    <!-- Retro Marquee Sign -->
-    <div class="marquee-sign">
-      <div class="marquee-bulbs marquee-bulbs-top"></div>
-      <div class="marquee-bulbs marquee-bulbs-right"></div>
-      <div class="marquee-bulbs marquee-bulbs-bottom"></div>
-      <div class="marquee-bulbs marquee-bulbs-left"></div>
-      <div class="marquee-inner">
-        <div class="marquee-text">
-          <span class="ml" style="--ml-i:0">A</span><span class="ml" style="--ml-i:1">W</span><span class="ml" style="--ml-i:2">A</span><span class="ml" style="--ml-i:3">R</span><span class="ml" style="--ml-i:4">A</span>
-        </div>
-      </div>
+    <div class="gate-hk-sign">
+      <span class="hk-char"></span><span class="hk-char"></span><span class="hk-char"></span>
+      <span class="hk-char"></span><span class="hk-char"></span><span class="hk-char"></span>
+      <span class="hk-char"></span><span class="hk-char"></span><span class="hk-char"></span>
+      <span class="hk-char"></span><span class="hk-char"></span><span class="hk-char"></span>
     </div>
+    <div class="gate-brand">AWARA</div>
     <div class="gate-sub">Loan Eligibility · Restricted Access</div>
     <div class="gate-card">
       <input type="password" class="gate-input" id="gateInput" placeholder="••••" maxlength="20" autocomplete="off" inputmode="numeric">
@@ -1157,7 +1044,6 @@
   </div>
 </div>
 
-<div class="app-balls" id="appBalls"></div>
 <div class="app" id="app">
   <header class="head">
     <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--neon-r),var(--neon-o),var(--neon-y),var(--neon-g),var(--neon-b),var(--neon-p),var(--neon-r));background-size:200% 100%;animation:rainbowShift 3s linear infinite;opacity:.8"></div>
@@ -4990,40 +4876,6 @@
   }
 
 
-  /* ===== POPULATE MARQUEE BULBS ===== */
-  (function fillMarqueeBulbs(){
-    const strips = document.querySelectorAll('.marquee-bulbs');
-    if (!strips.length) return;
-    strips.forEach(strip => {
-      const isVertical = strip.classList.contains('marquee-bulbs-left') || strip.classList.contains('marquee-bulbs-right');
-      const count = isVertical ? 6 : 14;
-      for (let i = 0; i < count; i++) {
-        const b = document.createElement('span');
-        b.className = 'mb';
-        b.style.animationDelay = (i * 0.18) + 's';
-        strip.appendChild(b);
-      }
-    });
-  })();
-
-  /* ===== FLOATING COLOR BALLS ON APP BACKGROUND ===== */
-  (function spawnAppBalls(){
-    const cont = document.getElementById('appBalls');
-    if (!cont) return;
-    const cols = ['#ff2d55','#ff9f0a','#ffd60a','#30d158','#0a84ff','#bf5af2','#5ac8fa','#F66BA6','#7CCB4C'];
-    function spawn(){
-      const el = document.createElement('div');
-      el.className = 'app-ball';
-      const size = Math.random()*16+8;
-      const col = cols[Math.floor(Math.random()*cols.length)];
-      el.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;background:radial-gradient(circle at 30% 30%,#fff,${col} 60%);box-shadow:0 0 ${size*1.2}px ${col},0 0 ${size*2}px ${col}40;animation-duration:${10+Math.random()*8}s;animation-delay:${Math.random()*2}s;`;
-      cont.appendChild(el);
-      setTimeout(()=>el.remove(), 22000);
-    }
-    setInterval(spawn, 700);
-    for (let i = 0; i < 8; i++) setTimeout(spawn, i*200);
-  })();
-
   /* ===== DISCO PARTICLES ON GATE ===== */
   (function spawnParticles(){
     const container = document.getElementById('discoParticles');
@@ -5184,7 +5036,6 @@
   });
 
   /* ============ GOOGLE SHEETS SYNC ============ */
-  const SHEET_ID = '1YEEyy4uSDRn8EwnVVwtJFGJ-mrmus3qcArsWZT0tSaU';
 
   function csvParse(text) {
     const rows = [];
@@ -5230,6 +5081,7 @@
 
   async function syncFromGoogleSheets() {
     setSyncStatus('syncing');
+    const SHEET_ID = '1YEEyy4uSDRn8EwnVVwtJFGJ-mrmus3qcArsWZT0tSaU';
     const url = (name) =>
       'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
       '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(name);
