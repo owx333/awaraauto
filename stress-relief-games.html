@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWARA Stress Buster 💥</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --coral: #FF6B6B;
+    --yellow: #FFE66D;
+    --mint: #4ECDC4;
+    --purple: #A855F7;
+    --orange: #FF9F43;
+    --blue: #54A0FF;
+    --pink: #FD79A8;
+    --green: #00B894;
+    --dark: #2D3436;
+    --light: #F8F9FA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    position: relative;
+  }
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: white;
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+    letter-spacing: 2px;
+  }
+  header p {
+    color: rgba(255,255,255,0.85);
+    font-size: 1rem;
+    margin-top: 0.4rem;
+    font-weight: 600;
+  }
+
+  /* ── MUSIC BAR ── */
+  #music-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 0.8rem auto 1.5rem;
+    background: rgba(255,255,255,0.18);
+    border-radius: 50px;
+    padding: 8px 20px;
+    width: fit-content;
+    backdrop-filter: blur(8px);
+  }
+  #music-bar button {
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 38px; height: 38px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #music-bar button:hover { transform: scale(1.15); }
+  #music-label {
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .visualizer {
+    display: flex; gap: 3px; align-items: flex-end; height: 24px;
+  }
+  .vis-bar {
+    width: 4px; background: white; border-radius: 2px;
+    animation: vis-dance 0.6s ease-in-out infinite alternate;
+    opacity: 0.7;
+  }
+  .vis-bar:nth-child(1){height:8px; animation-delay:0s;}
+  .vis-bar:nth-child(2){height:16px; animation-delay:0.1s;}
+  .vis-bar:nth-child(3){height:10px; animation-delay:0.2s;}
+  .vis-bar:nth-child(4){height:20px; animation-delay:0.05s;}
+  .vis-bar:nth-child(5){height:12px; animation-delay:0.15s;}
+  @keyframes vis-dance {
+    from { transform: scaleY(0.3); }
+    to   { transform: scaleY(1); }
+  }
+  .vis-bar.paused { animation-play-state: paused; }
+
+  /* ── GAME TABS ── */
+  #tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .tab-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.25);
+    color: white;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.4); transform: translateY(-2px); }
+  .tab-btn.active {
+    background: white;
+    color: var(--purple);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    transform: translateY(-3px);
+  }
+
+  /* ── GAME CONTAINER ── */
+  #game-area {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1rem 3rem;
+  }
+  .game-panel {
+    display: none;
+    background: white;
+    border-radius: 28px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .game-panel.active { display: block; }
+  @keyframes popIn {
+    from { opacity:0; transform: scale(0.88) translateY(20px); }
+    to   { opacity:1; transform: scale(1)   translateY(0); }
+  }
+  .game-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 0.3rem;
+  }
+  .game-sub {
+    text-align: center;
+    color: #888;
+    font-size: 0.88rem;
+    margin-bottom: 1.4rem;
+  }
+
+  /* ── FLOATING PARTICLES ── */
+  #particles {
+    position: fixed; top:0; left:0;
+    width:100%; height:100%;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: floatUp 1.2s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes floatUp {
+    0%   { opacity:1; transform: translateY(0) scale(1) rotate(0deg); }
+    100% { opacity:0; transform: translateY(-180px) scale(0) rotate(360deg); }
+  }
+
+  /* ════════════════════════════════
+     GAME 1 — HENTAM ORANG
+  ════════════════════════════════ */
+  #g1-name-wrap {
+    display: flex; gap: 10px; justify-content: center; margin-bottom: 1.2rem;
+  }
+  #g1-name-wrap input {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700;
+    padding: 8px 16px;
+    border: 2.5px solid #e0e0e0;
+    border-radius: 50px;
+    outline: none;
+    width: 220px;
+    transition: border-color 0.2s;
+    text-align: center;
+  }
+  #g1-name-wrap input:focus { border-color: var(--coral); }
+
+  #g1-scene {
+    position: relative;
+    height: 400px;
+    background: linear-gradient(180deg, #ffeaa7 0%, #fdcb6e 60%, #e17055 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid #e0e0e0;
+  }
+  #g1-ground {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: #8B4513;
+    border-radius: 0 0 17px 17px;
+  }
+  #g1-ground::before {
+    content: '';
+    position: absolute;
+    top: -12px; left: 0; right: 0;
+    height: 16px;
+    background: #5D8A37;
+    border-radius: 8px;
+  }
+
+  #person-wrap {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: transform 0.1s;
+  }
+  #person-canvas {
+    display: block;
+  }
+  #g1-nametag {
+    text-align: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+    background: white;
+    border-radius: 50px;
+    padding: 3px 16px;
+    display: inline-block;
+    border: 2px solid var(--coral);
+    color: var(--coral);
+    margin-top: 4px;
+    white-space: nowrap;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -32px;
+  }
+
+  #slipper-wrap {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-40deg);
+    transform-origin: 55px 10px;
+    transition: transform 0.07s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
+  }
+  #g1-hit-text {
+    position: absolute;
+    top: 50px; left: 50%; transform: translateX(-50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #d63031;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: opacity 0.1s;
+    z-index: 10;
+  }
+  #g1-stars {
+    position: absolute; top:0; left:0;
+    width:100%; height:100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+  #g1-count-wrap {
+    text-align: center; margin-top: 1rem;
+    font-size: 1rem; color: #666;
+  }
+  #g1-count-wrap span { font-family:'Fredoka One',cursive; font-size:2rem; color:var(--coral); }
+
+  /* ════════════════════════════════
+     GAME 2 — PECAH BUIH
+  ════════════════════════════════ */
+  #bubble-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 1.2rem;
+  }
+  .bubble {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.7rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.1s;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    padding: 6px;
+    line-height: 1.2;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid rgba(255,255,255,0.5);
+  }
+  .bubble::before {
+    content:'';
+    position: absolute;
+    top: 8px; left: 8px;
+    width: 35%; height: 35%;
+    background: rgba(255,255,255,0.45);
+    border-radius: 50%;
+  }
+  .bubble:hover { transform: scale(1.1); }
+  .bubble.popped {
+    animation: bubblePop 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  @keyframes bubblePop {
+    0%   { transform: scale(1); opacity:1; }
+    40%  { transform: scale(1.5); opacity:0.8; }
+    100% { transform: scale(0); opacity:0; }
+  }
+  #bubble-stats {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #f8f9fa; border-radius: 16px; padding: 10px 20px;
+  }
+  #bubble-stats .stat { text-align: center; }
+  #bubble-stats .stat-num { font-family:'Fredoka One',cursive; font-size:2rem; }
+  #bubble-stats .stat-lbl { font-size:12px; color:#888; }
+  #btn-refill {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem; padding: 10px 24px;
+    border: none; border-radius: 50px;
+    background: linear-gradient(135deg, var(--mint), var(--blue));
+    color: white; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 15px rgba(78,205,196,0.4);
+  }
+  #btn-refill:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(78,205,196,0.5); }
+
+  /* ════════════════════════════════
+     GAME 3 — HANCUR TELEFON
+  ════════════════════════════════ */
+  #phone-scene {
+    position: relative;
+    height: 360px;
+    background: linear-gradient(180deg, #2d3436 0%, #636e72 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: crosshair;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #phone-svg-wrap {
+    position: relative;
+    z-index: 2;
+  }
+  #phone-health-bar {
+    position: absolute; top: 16px; left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    z-index: 5;
+  }
+  #phone-health-bar label {
+    font-family:'Fredoka One',cursive;
+    color: white; font-size: 13px; display: block; text-align:center; margin-bottom:4px;
+  }
+  #health-track {
+    height: 16px; background: rgba(255,255,255,0.2);
+    border-radius: 50px; overflow: hidden; border: 2px solid rgba(255,255,255,0.3);
+  }
+  #health-fill {
+    height: 100%; width: 100%;
+    background: linear-gradient(90deg, #00b894, #55efc4);
+    border-radius: 50px;
+    transition: width 0.3s, background 0.3s;
+  }
+  #phone-hit-text {
+    position: absolute; top: 60px; left: 50%;
+    transform: translateX(-50%);
+    font-family:'Fredoka One',cursive;
+    font-size: 1.3rem; color: var(--yellow);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+    opacity: 0; pointer-events: none;
+    white-space: nowrap; z-index: 10;
+  }
+  #phone-broken-msg {
+    position: absolute; inset:0;
+    display: none; flex-direction:column;
+    align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.75);
+    z-index:20; text-align:center; border-radius: 17px;
+  }
+  #phone-broken-msg h2 {
+    font-family:'Fredoka One',cursive;
+    font-size: 2rem; color: var(--yellow);
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  }
+  #phone-broken-msg p { color:#ddd; margin: 0.5rem 0 1rem; }
+  #btn-new-phone {
+    font-family:'Fredoka One',cursive;
+    padding: 10px 28px; border:none; border-radius:50px;
+    background: var(--coral); color: white;
+    cursor:pointer; font-size:1rem;
+    transition: transform 0.15s;
+  }
+  #btn-new-phone:hover { transform: scale(1.05); }
+  #phone-score { text-align:center; margin-top:1rem; color:#666; font-size:1rem; }
+  #phone-score span { font-family:'Fredoka One',cursive; font-size:2rem; color: var(--orange); }
+  #crack-svg { position:absolute; top:0;left:0; width:100%;height:100%; pointer-events:none; z-index:3; }
+
+  /* ════════════════════════════════
+     GAME 4 — PAPAN LUAH
+  ════════════════════════════════ */
+  #luah-wrap { position: relative; }
+  #luah-display {
+    min-height: 200px;
+    background: linear-gradient(135deg, #2d3436, #636e72);
+    border-radius: 16px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-wrap: wrap;
+    gap: 8px; align-content: flex-start;
+  }
+  .luah-word {
+    font-family: 'Fredoka One', cursive;
+    padding: 6px 14px;
+    border-radius: 50px;
+    cursor: pointer;
+    animation: wordAppear 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    user-select: none;
+    transition: transform 0.1s;
+    white-space: nowrap;
+  }
+  .luah-word:hover { transform: scale(1.08); }
+  @keyframes wordAppear {
+    from { transform: scale(0) rotate(-15deg); opacity:0; }
+    to   { transform: scale(1) rotate(0deg);   opacity:1; }
+  }
+  .luah-word.explode {
+    animation: wordExplode 0.5s ease-out forwards;
+  }
+  @keyframes wordExplode {
+    0%  { transform: scale(1); opacity:1; }
+    30% { transform: scale(1.8) rotate(10deg); opacity:0.8; }
+    100%{ transform: scale(0) rotate(30deg);  opacity:0; }
+  }
+  #luah-input-row {
+    display: flex; gap: 10px;
+  }
+  #luah-input {
+    flex: 1;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700;
+    padding: 12px 18px;
+    border: 2.5px solid #e0e0e0;
+    border-radius: 50px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #luah-input:focus { border-color: var(--purple); }
+  #btn-luah {
+    font-family: 'Fredoka One', cursive;
+    padding: 12px 24px; border:none; border-radius:50px;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white; cursor:pointer; font-size:1rem;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 15px rgba(168,85,247,0.4);
+    white-space: nowrap;
+  }
+  #btn-luah:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(168,85,247,0.5); }
+  #btn-explode-all {
+    width: 100%; margin-top: 0.8rem;
+    font-family: 'Fredoka One', cursive;
+    padding: 12px; border:none; border-radius:50px;
+    background: linear-gradient(135deg, var(--coral), var(--orange));
+    color: white; cursor:pointer; font-size:1.1rem;
+    transition: transform 0.15s;
+    box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+  }
+  #btn-explode-all:hover { transform:scale(1.02); }
+  #luah-hint { text-align:center; color:#aaa; font-size:12px; margin-top:6px; }
+
+  /* ════════════════════════════════
+     GAME 5 — PUKUL TIKUS
+  ════════════════════════════════ */
+  #wam-scene {
+    position: relative;
+    background: linear-gradient(180deg, #87CEEB 0%, #98D8A0 60%, #8B6914 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 3px solid #e0e0e0;
+    min-height: 440px;
+  }
+  #wam-hud {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(4px);
+  }
+  .wam-stat { text-align:center; color:white; }
+  .wam-stat span { font-family:'Fredoka One',cursive; font-size:2rem; display:block; line-height:1; }
+  .wam-stat small { font-size:11px; opacity:0.8; }
+  #wam-timer-wrap {
+    flex:1; margin:0 16px;
+    height:14px; background:rgba(255,255,255,0.25);
+    border-radius:50px; overflow:hidden;
+    border:2px solid rgba(255,255,255,0.4);
+  }
+  #wam-timer-bar {
+    height:100%; width:100%;
+    background:linear-gradient(90deg,#00b894,#55efc4);
+    border-radius:50px;
+    transition:width 0.1s linear, background 0.5s;
+  }
+  #wam-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+  .wam-hole {
+    position: relative;
+    height: 100px;
+    display: flex; align-items: flex-end; justify-content: center;
+    overflow: hidden;
+  }
+  .wam-hole-bg {
+    width: 80px; height: 30px;
+    background: #5D3A1A;
+    border-radius: 50%;
+    box-shadow: inset 0 6px 12px rgba(0,0,0,0.5);
+    position: absolute; bottom: 0;
+    z-index: 1;
+  }
+  .wam-mole {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 70px; height: 80px;
+    cursor: pointer;
+    transition: transform 0.18s cubic-bezier(0.34,1.2,0.64,1);
+    z-index: 2;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .wam-mole.up { transform: translateX(-50%) translateY(20%); }
+  .wam-mole.bonk { transform: translateX(-50%) translateY(80%) scaleY(0.5); }
+  .wam-mole svg { width:100%; height:100%; }
+  #wam-overlay {
+    position:absolute; inset:0;
+    background:rgba(0,0,0,0.6);
+    display:flex; align-items:center; justify-content:center;
+    border-radius:17px;
+    backdrop-filter:blur(4px);
+    z-index:20;
+  }
+  #wam-overlay-content { text-align:center; }
+  #wam-overlay-icon { font-size:4rem; margin-bottom:0.5rem; }
+  #wam-overlay-title {
+    font-family:'Fredoka One',cursive;
+    font-size:2rem; color:white;
+    text-shadow:3px 3px 0 rgba(0,0,0,0.3);
+    margin-bottom:0.4rem;
+  }
+  #wam-overlay-sub { color:rgba(255,255,255,0.8); margin-bottom:1.2rem; }
+  #wam-start-btn {
+    font-family:'Fredoka One',cursive;
+    font-size:1.1rem; padding:12px 32px;
+    border:none; border-radius:50px;
+    background:linear-gradient(135deg,#FF6B6B,#FF9F43);
+    color:white; cursor:pointer;
+    box-shadow:0 4px 20px rgba(255,107,107,0.5);
+    transition:transform 0.15s;
+  }
+  #wam-start-btn:hover { transform:scale(1.05); }
+  #wam-hit-fx {
+    position:absolute; inset:0; pointer-events:none;
+    z-index:10; overflow:hidden;
+  }
+  .wam-hit-word {
+    position:absolute;
+    font-family:'Fredoka One',cursive;
+    font-size:1.1rem; color:#FFE66D;
+    text-shadow:2px 2px 0 rgba(0,0,0,0.4);
+    pointer-events:none;
+    animation:wamWordFly 0.8s ease-out forwards;
+    white-space:nowrap;
+  }
+  @keyframes wamWordFly {
+    0%   { opacity:1; transform:translateY(0) scale(1); }
+    100% { opacity:0; transform:translateY(-60px) scale(0.7); }
+  }
+
+  /* ════════════════════════════════
+     GAME 6 — CABUT NASIB
+  ════════════════════════════════ */
+  #luck-scene { padding: 1rem 0; }
+  #card-deck-wrap { text-align:center; padding: 1.5rem 0; }
+  #card-deck {
+    position:relative; width:200px; height:280px;
+    margin:0 auto 1rem;
+    cursor:pointer;
+  }
+  .deck-card {
+    position:absolute; inset:0;
+    border-radius:20px;
+    background:linear-gradient(135deg,#6C5CE7,#A855F7);
+    border:3px solid rgba(255,255,255,0.3);
+    box-shadow:0 8px 30px rgba(108,92,231,0.4);
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    transition:transform 0.2s;
+  }
+  .deck-card::before {
+    content:'';
+    position:absolute; inset:12px;
+    border:2px dashed rgba(255,255,255,0.25);
+    border-radius:12px;
+  }
+  .top-card:hover { transform:rotate(2deg) translateY(-8px) !important; }
+  #deck-hint { color:#888; font-size:13px; }
+  #luck-result { text-align:center; }
+  #luck-card-display {
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    border-radius:24px;
+    padding:2rem 1.5rem;
+    margin-bottom:1.2rem;
+    box-shadow:0 12px 40px rgba(102,126,234,0.4);
+    animation:cardReveal 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    position:relative; overflow:hidden;
+  }
+  #luck-card-display::before {
+    content:'';
+    position:absolute; inset:16px;
+    border:2px dashed rgba(255,255,255,0.2);
+    border-radius:14px;
+    pointer-events:none;
+  }
+  @keyframes cardReveal {
+    from { transform:rotateY(90deg) scale(0.7); opacity:0; }
+    to   { transform:rotateY(0deg)  scale(1);   opacity:1; }
+  }
+  #luck-card-emoji { font-size:4rem; margin-bottom:0.5rem; }
+  #luck-card-category {
+    font-family:'Fredoka One',cursive;
+    font-size:0.85rem; letter-spacing:2px;
+    color:rgba(255,255,255,0.7);
+    text-transform:uppercase; margin-bottom:0.8rem;
+  }
+  #luck-card-text {
+    font-family:'Fredoka One',cursive;
+    font-size:1.4rem; color:white;
+    text-shadow:2px 2px 0 rgba(0,0,0,0.2);
+    line-height:1.4; margin-bottom:1rem;
+  }
+  #luck-card-bonus {
+    background:rgba(255,255,255,0.15);
+    border-radius:12px; padding:10px 16px;
+    font-size:0.88rem; color:rgba(255,255,255,0.9);
+    font-style:italic;
+  }
+  #btn-cabut-lagi {
+    font-family:'Fredoka One',cursive;
+    font-size:1.1rem; padding:12px 32px;
+    border:none; border-radius:50px;
+    background:linear-gradient(135deg,#F59E0B,#EF4444);
+    color:white; cursor:pointer;
+    box-shadow:0 4px 20px rgba(245,158,11,0.4);
+    transition:transform 0.15s;
+  }
+  #btn-cabut-lagi:hover { transform:scale(1.05); }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    top: -20px;
+    animation: confettiFall linear forwards;
+    z-index: 1000;
+    pointer-events: none;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity:0; }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    padding: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    .game-panel { padding: 1.2rem; }
+    #bubble-board { grid-template-columns: repeat(4,1fr); gap:8px; }
+    .bubble { font-size: 0.62rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<header>
+  <h1>💥 AWARA Stress Buster 💥</h1>
+  <p>Lepaskan tekanan selepas customer tak angkat telefon!</p>
+  <div id="music-bar">
+    <button id="btn-music" title="Play/Pause muzik">▶</button>
+    <div class="visualizer" id="viz">
+      <div class="vis-bar"></div><div class="vis-bar"></div>
+      <div class="vis-bar"></div><div class="vis-bar"></div>
+      <div class="vis-bar"></div>
+    </div>
+    <span id="music-label">🎵 Seronok Mode</span>
+  </div>
+</header>
+
+<div id="tabs">
+  <button class="tab-btn active" onclick="switchGame(0)">👟 Hentam Orang</button>
+  <button class="tab-btn" onclick="switchGame(1)">🫧 Pecah Buih</button>
+  <button class="tab-btn" onclick="switchGame(2)">📱 Hancur Telefon</button>
+  <button class="tab-btn" onclick="switchGame(3)">💬 Papan Luah</button>
+  <button class="tab-btn" onclick="switchGame(4)">🔨 Pukul Tikus</button>
+  <button class="tab-btn" onclick="switchGame(5)">🃏 Cabut Nasib</button>
+</div>
+
+<div id="game-area">
+
+  <!-- ═══ GAME 1: HENTAM ORANG ═══ -->
+  <div class="game-panel active" id="panel-0">
+    <div class="game-title" style="color:var(--coral)">👟 Hentam Orang!</div>
+    <div class="game-sub">Tulis nama target, pastu hentam dengan selipar!</div>
+    <div id="g1-name-wrap">
+      <input type="text" id="g1-name" maxlength="16" placeholder="Nama customer" value="Customer Buat Hal" />
+    </div>
+    <div id="g1-scene">
+      <svg id="g1-stars" viewBox="0 0 500 400"></svg>
+      <!-- Sun -->
+      <svg style="position:absolute;top:10px;right:20px" width="70" height="70" viewBox="0 0 70 70">
+        <circle cx="35" cy="35" r="20" fill="#FFE66D"/>
+        <g stroke="#FFE66D" stroke-width="3" stroke-linecap="round">
+          <line x1="35" y1="6" x2="35" y2="14"/>
+          <line x1="35" y1="56" x2="35" y2="64"/>
+          <line x1="6" y1="35" x2="14" y2="35"/>
+          <line x1="56" y1="35" x2="64" y2="35"/>
+          <line x1="15" y1="15" x2="21" y2="21"/>
+          <line x1="49" y1="49" x2="55" y2="55"/>
+          <line x1="55" y1="15" x2="49" y2="21"/>
+          <line x1="21" y1="49" x2="15" y2="55"/>
+        </g>
+      </svg>
+      <!-- Clouds -->
+      <svg style="position:absolute;top:20px;left:20px" width="90" height="40" viewBox="0 0 90 40">
+        <ellipse cx="45" cy="28" rx="40" ry="15" fill="white" opacity="0.8"/>
+        <ellipse cx="30" cy="24" rx="22" ry="14" fill="white" opacity="0.8"/>
+        <ellipse cx="60" cy="22" rx="18" ry="12" fill="white" opacity="0.8"/>
+      </svg>
+
+      <!-- Slipper -->
+      <div id="slipper-wrap">
+        <svg width="110" height="80" viewBox="0 0 110 80">
+          <ellipse cx="55" cy="68" rx="50" ry="10" fill="#B07010" opacity="0.3"/>
+          <path d="M8,58 Q30,18 75,16 Q96,14 98,36 Q100,54 78,64 Q55,74 18,72 Q2,68 8,58Z" fill="#E8A020" stroke="#B07010" stroke-width="2"/>
+          <path d="M28,50 Q52,38 76,44" stroke="#B07010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M16,60 Q38,28 70,20" stroke="#C89020" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.4"/>
+          <ellipse cx="52" cy="56" rx="20" ry="9" fill="#F0B830" opacity="0.4"/>
+          <text x="35" y="40" font-family="Fredoka One" font-size="11" fill="#7A5000" opacity="0.7">SELIPAR</text>
+        </svg>
+      </div>
+
+      <!-- Person -->
+      <div id="person-wrap">
+        <canvas id="person-canvas" width="130" height="220"></canvas>
+        <div id="g1-nametag">Customer Buat Hal</div>
+      </div>
+
+      <div id="g1-ground"></div>
+      <div id="g1-hit-text">Ambik kau!</div>
+    </div>
+    <div id="g1-count-wrap">Dah hentam <span id="g1-count">0</span> kali</div>
+  </div>
+
+  <!-- ═══ GAME 2: PECAH BUIH ═══ -->
+  <div class="game-panel" id="panel-1">
+    <div class="game-title" style="color:var(--mint)">🫧 Pecah Buih Masalah!</div>
+    <div class="game-sub">Setiap buih = satu masalah. Klik untuk pecahkan!</div>
+    <div id="bubble-board"></div>
+    <div id="bubble-stats">
+      <div class="stat">
+        <div class="stat-num" id="b-popped" style="color:var(--mint)">0</div>
+        <div class="stat-lbl">Dah Pecah</div>
+      </div>
+      <button id="btn-refill" onclick="fillBubbles()">🫧 Isi Semula</button>
+      <div class="stat">
+        <div class="stat-num" id="b-left" style="color:var(--coral)">20</div>
+        <div class="stat-lbl">Tinggal</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GAME 3: HANCUR TELEFON ═══ -->
+  <div class="game-panel" id="panel-2">
+    <div class="game-title" style="color:var(--orange)">📱 Hancur Telefon!</div>
+    <div class="game-sub">Klik telefon untuk pecahkan! Bayangkan telefon customer yang tak angkat.</div>
+    <div id="phone-scene">
+      <div id="phone-health-bar">
+        <label>Nyawa Telefon</label>
+        <div id="health-track"><div id="health-fill"></div></div>
+      </div>
+      <svg id="crack-svg" viewBox="0 0 400 360"></svg>
+      <div id="phone-hit-text">Ambik kau!</div>
+      <div id="phone-svg-wrap">
+        <svg id="phone-svg" width="160" height="280" viewBox="0 0 160 280">
+          <rect x="10" y="10" width="140" height="260" rx="20" ry="20" fill="#2d3436" stroke="#636e72" stroke-width="3"/>
+          <rect x="18" y="30" width="124" height="195" rx="6" fill="#74b9ff"/>
+          <circle cx="80" cy="15" r="4" fill="#636e72"/>
+          <rect x="60" y="13" width="30" height="5" rx="2.5" fill="#636e72"/>
+          <circle cx="80" cy="255" r="16" fill="#636e72" stroke="#4d4d4d" stroke-width="2"/>
+          <rect x="25" y="42" width="60" height="8" rx="4" fill="rgba(255,255,255,0.3)"/>
+          <rect x="25" y="56" width="40" height="6" rx="3" fill="rgba(255,255,255,0.2)"/>
+          <rect x="25" y="80" width="110" height="120" rx="8" fill="rgba(255,255,255,0.15)"/>
+          <text x="50" y="145" font-family="Fredoka One" font-size="13" fill="white" opacity="0.6">TAK ANGKAT</text>
+          <text x="60" y="162" font-family="Fredoka One" font-size="22" fill="white">📵</text>
+        </svg>
+      </div>
+      <div id="phone-broken-msg">
+        <h2>💥 HANCUR! 💥</h2>
+        <p>Rasa lega sikit tak? 😄</p>
+        <button id="btn-new-phone" onclick="resetPhone()">Telefon Baru! 📱</button>
+      </div>
+    </div>
+    <div id="phone-score">Sudah pecah <span id="phone-hits">0</span> kali</div>
+  </div>
+
+  <!-- ═══ GAME 4: PAPAN LUAH ═══ -->
+  <div class="game-panel" id="panel-3">
+    <div class="game-title" style="color:var(--purple)">💬 Papan Luah Perasaan!</div>
+    <div class="game-sub">Taip apa sahaja yang buat kau geram. Klik perkataan untuk letupkan!</div>
+    <div id="luah-wrap">
+      <div id="luah-display"></div>
+      <div id="luah-input-row">
+        <input type="text" id="luah-input" placeholder="Taip perasaan kau..." maxlength="30"/>
+        <button id="btn-luah" onclick="addLuahWord()">💥 Luah!</button>
+      </div>
+      <button id="btn-explode-all" onclick="explodeAll()">🔥 LETUP SEMUA!</button>
+      <div id="luah-hint">Klik mana-mana perkataan untuk letupkannya</div>
+    </div>
+  </div>
+
+</div><!-- #game-area -->
+
+  <!-- ═══ GAME 5: PUKUL TIKUS ═══ -->
+  <div class="game-panel" id="panel-4">
+    <div class="game-title" style="color:#8B4513">🔨 Pukul Tikus Customer!</div>
+    <div class="game-sub">Tikus (customer) keluar dari lubang — pukul sebelum dia masuk balik!</div>
+    <div id="wam-scene">
+      <div id="wam-hud">
+        <div class="wam-stat"><span id="wam-score">0</span><small>Markah</small></div>
+        <div id="wam-timer-wrap"><div id="wam-timer-bar"></div></div>
+        <div class="wam-stat"><span id="wam-miss">0</span><small>Terlepas</small></div>
+      </div>
+      <div id="wam-grid"></div>
+      <div id="wam-overlay">
+        <div id="wam-overlay-content">
+          <div id="wam-overlay-icon">🐭</div>
+          <h2 id="wam-overlay-title">Pukul Tikus!</h2>
+          <p id="wam-overlay-sub">30 saat je — pukul sebanyak mungkin!</p>
+          <button id="wam-start-btn" onclick="startWam()">🔨 Mulakan!</button>
+        </div>
+      </div>
+      <div id="wam-hit-fx"></div>
+    </div>
+  </div>
+
+  <!-- ═══ GAME 6: CABUT NASIB ═══ -->
+  <div class="game-panel" id="panel-5">
+    <div class="game-title" style="color:#F59E0B">🃏 Cabut Nasib Hari Ini!</div>
+    <div class="game-sub">Cabut satu kad untuk semangat, nasihat, atau lawak hari ini!</div>
+    <div id="luck-scene">
+      <div id="card-deck-wrap">
+        <div id="card-deck">
+          <div class="deck-card" style="transform:rotate(-8deg) translate(-6px,4px)"></div>
+          <div class="deck-card" style="transform:rotate(-4deg) translate(-3px,2px)"></div>
+          <div class="deck-card" style="transform:rotate(2deg) translate(2px,-1px)"></div>
+          <div class="deck-card top-card" id="top-card">
+            <span style="font-size:3rem">🃏</span>
+            <p style="font-family:'Fredoka One',cursive;color:white;margin-top:8px">Klik untuk cabut!</p>
+          </div>
+        </div>
+        <p id="deck-hint">Klik kad untuk cabut nasib kau hari ini</p>
+      </div>
+      <div id="luck-result" style="display:none">
+        <div id="luck-card-display">
+          <div id="luck-card-emoji"></div>
+          <div id="luck-card-category"></div>
+          <div id="luck-card-text"></div>
+          <div id="luck-card-bonus"></div>
+        </div>
+        <button id="btn-cabut-lagi" onclick="resetLuck()">🃏 Cabut Lagi!</button>
+      </div>
+    </div>
+  </div>
+
+<footer>Made with 💙 untuk team AWARA — Korang boleh buat ni! 💪</footer>
+
+<script>
+/* ═══════════════════════════
+   AUDIO ENGINE
+═══════════════════════════ */
+const AC = new (window.AudioContext || window.webkitAudioContext)();
+let musicPlaying = false;
+let musicOsc = [], musicInterval;
+
+function playTone(freq, type='sine', dur=0.15, vol=0.3, delay=0) {
+  const o = AC.createOscillator();
+  const g = AC.createGain();
+  o.connect(g); g.connect(AC.destination);
+  o.frequency.value = freq;
+  o.type = type;
+  const t = AC.currentTime + delay;
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+  o.start(t); o.stop(t+dur+0.01);
+}
+
+function playSlapSound() {
+  [180,90,60].forEach((f,i) => playTone(f,'sawtooth',0.1,0.4,i*0.04));
+  playTone(800,'square',0.05,0.2);
+}
+function playPopSound() {
+  playTone(600,'sine',0.08,0.25);
+  playTone(900,'sine',0.06,0.15,0.06);
+}
+function playCrackSound() {
+  [300,150,80].forEach((f,i) => playTone(f,'sawtooth',0.12,0.35,i*0.03));
+}
+function playExplodeSound() {
+  [400,200,100].forEach((f,i) => playTone(f,'square',0.15,0.3,i*0.04));
+}
+function playWinSound() {
+  [523,659,784,1047].forEach((f,i) => playTone(f,'sine',0.3,0.4,i*0.12));
+}
+
+const MELODY = [523,587,659,698,784,880,988,1047,988,880,784,698,659,587];
+let melIdx = 0;
+function startMusic() {
+  musicPlaying = true;
+  document.getElementById('btn-music').textContent = '⏸';
+  document.querySelectorAll('.vis-bar').forEach(b => b.classList.remove('paused'));
+  musicInterval = setInterval(() => {
+    playTone(MELODY[melIdx % MELODY.length],'sine',0.22,0.12);
+    if(melIdx%3===0) playTone(MELODY[melIdx%MELODY.length]/2,'sine',0.22,0.06);
+    melIdx++;
+  }, 350);
+}
+function stopMusic() {
+  musicPlaying = false;
+  document.getElementById('btn-music').textContent = '▶';
+  document.querySelectorAll('.vis-bar').forEach(b => b.classList.add('paused'));
+  clearInterval(musicInterval);
+}
+document.getElementById('btn-music').addEventListener('click', () => {
+  AC.resume().then(() => musicPlaying ? stopMusic() : startMusic());
+});
+
+/* ═══════════════════════════
+   TABS
+═══════════════════════════ */
+function switchGame(idx) {
+  document.querySelectorAll('.game-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  if(idx===1 && document.querySelectorAll('.bubble').length===0) fillBubbles();
+}
+
+/* ═══════════════════════════
+   PARTICLES
+═══════════════════════════ */
+function spawnParticles(x, y, n=12) {
+  const colors = ['#FF6B6B','#FFE66D','#4ECDC4','#A855F7','#FF9F43','#54A0FF','#FD79A8','#00B894'];
+  const cont = document.getElementById('particles');
+  for(let i=0;i<n;i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 8 + Math.random()*12;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${x-size/2}px; top:${y}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${0.8+Math.random()*0.6}s;
+      animation-delay:${Math.random()*0.1}s;
+      transform: translateX(${(Math.random()-0.5)*120}px);
+    `;
+    cont.appendChild(p);
+    setTimeout(()=>p.remove(), 1500);
+  }
+}
+
+function launchConfetti() {
+  const colors = ['#FF6B6B','#FFE66D','#4ECDC4','#A855F7','#FF9F43','#54A0FF'];
+  for(let i=0;i<40;i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    const size = 6 + Math.random()*10;
+    c.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}vw;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+      animation-duration:${1.5+Math.random()*1.5}s;
+      animation-delay:${Math.random()*0.5}s;
+    `;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 3000);
+  }
+}
+
+/* ═══════════════════════════
+   GAME 1 — HENTAM ORANG
+═══════════════════════════ */
+const g1Phrases = [
+  "Ambik kau! 💥","Apasal tak angkat!","Kau ingat aku takde kerja lain!","Padan muka!","Dah lama aku simpan ni!","Tension betul la!","Angkat la telefon woi!","Sapa suruh buat hal!","Kau tahu tak aku baru minum kopi!","Selipar aku untuk kau!"
+];
+let g1Count = 0, g1Hitting = false;
+
+function drawPerson(ctx, shake=false, hit=false) {
+  ctx.clearRect(0,0,130,220);
+  const dx = shake ? (Math.random()-0.5)*8 : 0;
+  const dy = hit ? 6 : 0;
+  ctx.save();
+  ctx.translate(dx, dy);
+
+  // Shadow
+  ctx.beginPath();
+  ctx.ellipse(65, 215, 35, 8, 0, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(0,0,0,0.15)'; ctx.fill();
+
+  // Legs
+  [[38,155],[72,155]].forEach(([x,y]) => {
+    ctx.beginPath();
+    ctx.roundRect(x, y, 18, 58, 6);
+    ctx.fillStyle = '#2C3E7A'; ctx.fill();
+    ctx.strokeStyle='#1A2550'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.beginPath();
+    ctx.roundRect(x-3, 207, 24, 10, 5);
+    ctx.fillStyle='#444'; ctx.fill();
+  });
+
+  // Body
+  ctx.beginPath();
+  ctx.roundRect(30, 68, 70, 90, 10);
+  ctx.fillStyle = hit ? '#E84393' : '#FF6B9D';
+  ctx.fill(); ctx.strokeStyle='#c0396e'; ctx.lineWidth=1.5; ctx.stroke();
+
+  // Arms
+  [[10,78,28,78],[102,78,120,78]].forEach(([x1,y1,x2,y2],i) => {
+    ctx.beginPath();
+    const ctrl = i===0 ? [x1-10, y1+30] : [x2+10, y2+30];
+    ctx.moveTo(x1,y1);
+    ctx.bezierCurveTo(ctrl[0], ctrl[1], ctrl[0], ctrl[1]+10, i===0?x1-4:x2+4, y1+50);
+    ctx.strokeStyle='#FF6B9D'; ctx.lineWidth=14; ctx.lineCap='round'; ctx.stroke();
+    // hand
+    ctx.beginPath();
+    ctx.arc(i===0?x1-4:x2+4, y1+50, 9, 0, Math.PI*2);
+    ctx.fillStyle='#FFDAB9'; ctx.fill();
+    ctx.strokeStyle='#D4956A'; ctx.lineWidth=1.5; ctx.stroke();
+  });
+
+  // Head
+  ctx.beginPath();
+  ctx.ellipse(65, 40, 32, 34, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#FFDAB9'; ctx.fill();
+  ctx.strokeStyle='#D4956A'; ctx.lineWidth=2; ctx.stroke();
+
+  // Hair
+  ctx.beginPath();
+  ctx.ellipse(65, 14, 28, 14, 0, Math.PI, Math.PI*2);
+  ctx.fillStyle='#5D3A1A'; ctx.fill();
+
+  // Eyes
+  if(hit) {
+    // X eyes
+    [52,78].forEach(ex => {
+      ctx.strokeStyle='#333'; ctx.lineWidth=2.5;
+      [[ex-5,30,ex+5,40],[ex-5,40,ex+5,30]].forEach(([x1,y1,x2,y2]) => {
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+      });
+    });
+  } else {
+    [52,78].forEach(ex => {
+      ctx.beginPath(); ctx.ellipse(ex,34,5,6,0,0,Math.PI*2);
+      ctx.fillStyle='white'; ctx.fill();
+      ctx.beginPath(); ctx.arc(ex,35,3,0,Math.PI*2);
+      ctx.fillStyle='#333'; ctx.fill();
+    });
+  }
+
+  // Mouth
+  ctx.beginPath();
+  if(hit) {
+    ctx.arc(65, 54, 10, 0, Math.PI);
+    ctx.fillStyle='#c0396e'; ctx.fill();
+    ctx.strokeStyle='#c0396e'; ctx.lineWidth=2; ctx.stroke();
+  } else {
+    ctx.moveTo(55,52); ctx.quadraticCurveTo(65,60,75,52);
+    ctx.strokeStyle='#D4956A'; ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.stroke();
+  }
+
+  // Stars over head when hit
+  if(hit) {
+    ['⭐','💫','✨'].forEach((s,i) => {
+      ctx.font='14px serif'; ctx.fillText(s, 40+i*20, 12);
+    });
+  }
+
+  ctx.restore();
+}
+
+(function initG1() {
+  const canvas = document.getElementById('person-canvas');
+  const ctx = canvas.getContext('2d');
+  drawPerson(ctx);
+
+  document.getElementById('g1-name').addEventListener('input', function() {
+    document.getElementById('g1-nametag').textContent = this.value || 'Target';
+  });
+
+  function doHentam(e) {
+    if(g1Hitting) return;
+    g1Hitting = true;
+    AC.resume();
+    playSlapSound();
+
+    const phrase = g1Phrases[g1Count % g1Phrases.length];
+    const hitEl = document.getElementById('g1-hit-text');
+    hitEl.textContent = phrase;
+    hitEl.style.opacity = '1';
+    hitEl.style.top = (60 + Math.random()*40)+'px';
+
+    const slipper = document.getElementById('slipper-wrap');
+    slipper.style.transform = 'translateX(-50%) rotate(15deg) translateY(160px)';
+
+    drawPerson(ctx, true, true);
+
+    const rect = document.getElementById('g1-scene').getBoundingClientRect();
+    const cx = e.clientX || rect.left + rect.width/2;
+    const cy = e.clientY || rect.top + rect.height/2;
+    spawnParticles(cx, cy - 60, 15);
+
+    // SVG stars
+    const svg = document.getElementById('g1-stars');
+    for(let i=0;i<8;i++) {
+      const colors=['#FFE66D','#FF6B6B','#54A0FF','#4ECDC4','#FD79A8'];
+      const cx2=200+((Math.random()-0.5)*200), cy2=100+Math.random()*150;
+      const s=8+Math.random()*10;
+      const star=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+      const pts=[]; for(let j=0;j<5;j++){
+        const a=(Math.PI*2*j/5)-Math.PI/2;
+        const a2=a+Math.PI/5;
+        pts.push(`${cx2+Math.cos(a)*s},${cy2+Math.sin(a)*s}`);
+        pts.push(`${cx2+Math.cos(a2)*s*0.4},${cy2+Math.sin(a2)*s*0.4}`);
+      }
+      star.setAttribute('points',pts.join(' '));
+      star.setAttribute('fill',colors[Math.floor(Math.random()*colors.length)]);
+      svg.appendChild(star);
+      let prog=0;
+      const step=()=>{
+        prog+=0.06; if(prog>=1){svg.removeChild(star);return;}
+        const e2=1-Math.pow(1-prog,2);
+        const tx=(Math.random()-0.5)*100*e2, ty=-80*e2;
+        star.setAttribute('transform',`translate(${tx},${ty}) scale(${1-prog*0.7})`);
+        star.setAttribute('opacity',String(1-prog));
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    g1Count++;
+    document.getElementById('g1-count').textContent = g1Count;
+    if(g1Count % 5 === 0) launchConfetti();
+
+    setTimeout(() => {
+      slipper.style.transform = 'translateX(-50%) rotate(-40deg)';
+      drawPerson(ctx, false, false);
+      setTimeout(() => {
+        hitEl.style.opacity='0';
+        g1Hitting=false;
+      }, 700);
+    }, 200);
+  }
+
+  document.getElementById('g1-scene').addEventListener('click', doHentam);
+  document.getElementById('g1-scene').addEventListener('touchstart', e => { e.preventDefault(); doHentam(e.touches[0]); }, {passive:false});
+})();
+
+/* ═══════════════════════════
+   GAME 2 — PECAH BUIH
+═══════════════════════════ */
+const bubblePhrases = [
+  "Tak angkat","Talian sibuk","Tak in service","Hantar je dulu","Follow up lagi","Dah 5 kali call","Mood swing","Tak reply","Asyik reject","Customer garang","Dah lama tunggu","Tak baca msg","Tibe-tibe hilang","Tak logik","Buang masa","Stres tahap dewa","Menyampah gila","Sabar je la","Kenapa macam ni","Redha je la"
+];
+const bubbleColors = [
+  '#FF6B6B','#4ECDC4','#A855F7','#FF9F43','#54A0FF','#FD79A8','#00B894','#FFE66D','#E17055','#6C5CE7'
+];
+let bPopped=0, bTotal=20;
+
+function fillBubbles() {
+  const board = document.getElementById('bubble-board');
+  board.innerHTML='';
+  bPopped=0; bTotal=20;
+  document.getElementById('b-popped').textContent='0';
+  document.getElementById('b-left').textContent=bTotal;
+  const shuffled=[...bubblePhrases].sort(()=>Math.random()-0.5);
+  shuffled.slice(0,bTotal).forEach((txt,i)=>{
+    const b=document.createElement('div');
+    b.className='bubble';
+    b.textContent=txt;
+    b.style.background=`radial-gradient(circle at 35% 35%, ${bubbleColors[i%bubbleColors.length]}dd, ${bubbleColors[(i+3)%bubbleColors.length]}aa)`;
+    b.style.animationDelay=(i*0.04)+'s';
+    b.addEventListener('click', ()=>popBubble(b));
+    b.addEventListener('touchstart', e=>{e.preventDefault(); popBubble(b);},{passive:false});
+    board.appendChild(b);
+  });
+}
+
+function popBubble(el) {
+  if(el.classList.contains('popped')||el.dataset.dead) return;
+  el.dataset.dead='1';
+  AC.resume(); playPopSound();
+  const r=el.getBoundingClientRect();
+  spawnParticles(r.left+r.width/2, r.top+r.height/2, 10);
+  el.classList.add('popped');
+  bPopped++;
+  document.getElementById('b-popped').textContent=bPopped;
+  document.getElementById('b-left').textContent=bTotal-bPopped;
+  setTimeout(()=>el.remove(),400);
+  if(bPopped>=bTotal){ playWinSound(); launchConfetti(); }
+}
+
+/* ═══════════════════════════
+   GAME 3 — HANCUR TELEFON
+═══════════════════════════ */
+const phonePhrase=[
+  "Ambik kau! 🔨","Balas la call aku!","Kenapa tak angkat???","Padan muka telefon!","Kau ingat aku suka call?","Rosak la kau!","Dah lama simpan ni!","Tension dah ni!","Buat aku geram je!","Rasa lega sikit!"
+];
+let phoneHP=100, phoneTotalHits=0, phoneHitting=false;
+const cracks=[];
+
+function getPhoneClickHandler(e) {
+  if(phoneHitting||phoneHP<=0) return;
+  phoneHitting=true;
+  AC.resume(); playCrackSound();
+
+  phoneHP -= (8+Math.random()*12);
+  if(phoneHP<0) phoneHP=0;
+
+  const fill=document.getElementById('health-fill');
+  fill.style.width=phoneHP+'%';
+  fill.style.background = phoneHP>60 ? 'linear-gradient(90deg,#00b894,#55efc4)'
+    : phoneHP>30 ? 'linear-gradient(90deg,#f9ca24,#f0932b)'
+    : 'linear-gradient(90deg,#d63031,#ff7675)';
+
+  const phrase=phonePhrase[phoneTotalHits%phonePhrase.length];
+  const htEl=document.getElementById('phone-hit-text');
+  htEl.textContent=phrase; htEl.style.opacity='1';
+
+  // Add crack
+  const crackSvg=document.getElementById('crack-svg');
+  const scene=document.getElementById('phone-scene');
+  const sr=scene.getBoundingClientRect();
+  const cx=(e.clientX-sr.left)/(sr.width)*400||200;
+  const cy=(e.clientY-sr.top)/(sr.height)*360||180;
+  addCrack(crackSvg,cx,cy);
+
+  // Shake phone
+  const pw=document.getElementById('phone-svg-wrap');
+  pw.style.transform=`translate(${(Math.random()-0.5)*12}px,${(Math.random()-0.5)*8}px) rotate(${(Math.random()-0.5)*6}deg)`;
+
+  const rect=scene.getBoundingClientRect();
+  spawnParticles(e.clientX||rect.left+rect.width/2, e.clientY||rect.top+50, 12);
+
+  phoneTotalHits++;
+  document.getElementById('phone-hits').textContent=phoneTotalHits;
+
+  setTimeout(()=>{
+    pw.style.transform='';
+    htEl.style.opacity='0';
+    phoneHitting=false;
+    if(phoneHP<=0) { showPhoneBroken(); }
+  }, 220);
+}
+
+function addCrack(svg, cx, cy) {
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  const numLines=4+Math.floor(Math.random()*4);
+  for(let i=0;i<numLines;i++){
+    const angle=Math.random()*Math.PI*2;
+    const len=30+Math.random()*70;
+    const ex=cx+Math.cos(angle)*len, ey=cy+Math.sin(angle)*len;
+    const mx=cx+Math.cos(angle)*len*0.5+(Math.random()-0.5)*20;
+    const my=cy+Math.sin(angle)*len*0.5+(Math.random()-0.5)*20;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${cx},${cy} Q${mx},${my} ${ex},${ey}`);
+    path.setAttribute('stroke','rgba(255,255,255,0.7)');
+    path.setAttribute('stroke-width','1.5');
+    path.setAttribute('fill','none');
+    g.appendChild(path);
+  }
+  svg.appendChild(g);
+}
+
+function showPhoneBroken() {
+  playWinSound(); launchConfetti();
+  document.getElementById('phone-broken-msg').style.display='flex';
+}
+
+function resetPhone() {
+  phoneHP=100; phoneTotalHits=0; phoneHitting=false;
+  document.getElementById('health-fill').style.width='100%';
+  document.getElementById('health-fill').style.background='linear-gradient(90deg,#00b894,#55efc4)';
+  document.getElementById('crack-svg').innerHTML='';
+  document.getElementById('phone-hits').textContent='0';
+  document.getElementById('phone-broken-msg').style.display='none';
+  document.getElementById('phone-svg-wrap').style.transform='';
+}
+
+document.getElementById('phone-scene').addEventListener('click', getPhoneClickHandler);
+document.getElementById('phone-scene').addEventListener('touchstart', e=>{e.preventDefault(); getPhoneClickHandler(e.touches[0]);},{passive:false});
+
+/* ═══════════════════════════
+   GAME 4 — PAPAN LUAH
+═══════════════════════════ */
+const luahColors=[
+  ['#FF6B6B','#fff'],['#4ECDC4','#fff'],['#A855F7','#fff'],
+  ['#FF9F43','#fff'],['#54A0FF','#fff'],['#FD79A8','#fff'],
+  ['#00B894','#fff'],['#E17055','#fff'],['#6C5CE7','#fff'],['#f9ca24','#2d3436']
+];
+let luahColorIdx=0;
+
+const defaultLuahWords=['Stress!','Tension!','Tak faham!','Sabar je','Kenapa ni?!','Nak give up','Dah lah','Penat sangat','Tak boleh blah','Redha je'];
+let luahInited=false;
+
+function initLuah() {
+  if(luahInited) return; luahInited=true;
+  defaultLuahWords.forEach(w=>addLuahWordText(w));
+  document.getElementById('luah-input').addEventListener('keydown',e=>{
+    if(e.key==='Enter') addLuahWord();
+  });
+}
+
+function addLuahWord() {
+  const inp=document.getElementById('luah-input');
+  const val=inp.value.trim();
+  if(!val) return;
+  AC.resume(); playPopSound();
+  addLuahWordText(val);
+  inp.value='';
+  inp.focus();
+}
+
+function addLuahWordText(text) {
+  const display=document.getElementById('luah-display');
+  const el=document.createElement('div');
+  el.className='luah-word';
+  const [bg,fg]=luahColors[luahColorIdx%luahColors.length];
+  luahColorIdx++;
+  el.style.background=bg; el.style.color=fg;
+  el.style.fontSize=(14+Math.floor(Math.random()*10))+'px';
+  el.textContent=text;
+  el.addEventListener('click',()=>explodeWord(el));
+  el.addEventListener('touchstart',e=>{e.preventDefault();explodeWord(el);},{passive:false});
+  display.appendChild(el);
+}
+
+function explodeWord(el) {
+  if(el.dataset.dead) return;
+  el.dataset.dead='1';
+  AC.resume(); playExplodeSound();
+  const r=el.getBoundingClientRect();
+  spawnParticles(r.left+r.width/2, r.top+r.height/2, 14);
+  el.classList.add('explode');
+  setTimeout(()=>el.remove(), 500);
+}
+
+function explodeAll() {
+  AC.resume();
+  document.querySelectorAll('.luah-word:not([data-dead])').forEach((el,i)=>{
+    setTimeout(()=>explodeWord(el), i*60);
+  });
+  setTimeout(()=>{ playWinSound(); launchConfetti(); }, 300);
+}
+
+// Init luah when tab opened
+document.querySelectorAll('.tab-btn')[3].addEventListener('click', initLuah);
+
+/* ─── auto-init if already on tab 3 ─── */
+if(document.getElementById('panel-3').classList.contains('active')) initLuah();
+
+/* ─── phone health init ─── */
+document.getElementById('health-fill').style.width='100%';
+/* ═══════════════════════════
+   GAME 5 — PUKUL TIKUS (Whack-a-Mole)
+═══════════════════════════ */
+const wamPhrases = [
+  "Kena kau!","Padan muka!","Dah lama tunggu ni!","Habis kau!","Angkat la telefon!","Tension betul!","Sapa suruh buat hal!","Ambik kau tikus!","Lari lagi la!","Dah penat dah!"
+];
+const moleEmojis = ['😤','😱','🐭','😵','🤯'];
+let wamScore=0, wamMiss=0, wamActive=false, wamTimer=null, wamSpawner=null, wamTimeLeft=30;
+const WAM_HOLES = 9;
+let wamMoles = [];
+let wamHoleTimers = [];
+
+function buildWamGrid() {
+  const grid = document.getElementById('wam-grid');
+  grid.innerHTML = '';
+  wamMoles = [];
+  wamHoleTimers = [];
+  for(let i=0;i<WAM_HOLES;i++) {
+    const hole = document.createElement('div');
+    hole.className = 'wam-hole';
+    const bg = document.createElement('div');
+    bg.className = 'wam-hole-bg';
+    const mole = document.createElement('div');
+    mole.className = 'wam-mole';
+    const emoji = moleEmojis[Math.floor(Math.random()*moleEmojis.length)];
+    mole.innerHTML = `<svg viewBox="0 0 70 80" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="35" cy="72" rx="30" ry="10" fill="#5D3A1A" opacity="0.3"/>
+      <ellipse cx="35" cy="50" rx="28" ry="32" fill="#8B6914"/>
+      <ellipse cx="35" cy="48" rx="22" ry="26" fill="#C8941A"/>
+      <ellipse cx="22" cy="24" rx="10" ry="14" fill="#8B6914" transform="rotate(-15,22,24)"/>
+      <ellipse cx="48" cy="24" rx="10" ry="14" fill="#8B6914" transform="rotate(15,48,24)"/>
+      <ellipse cx="22" cy="25" rx="7" ry="10" fill="#FFC0CB" transform="rotate(-15,22,25)"/>
+      <ellipse cx="48" cy="25" rx="7" ry="10" fill="#FFC0CB" transform="rotate(15,48,25)"/>
+      <circle cx="26" cy="40" r="6" fill="white"/>
+      <circle cx="44" cy="40" r="6" fill="white"/>
+      <circle cx="27" cy="41" r="3.5" fill="#1a1a1a"/>
+      <circle cx="45" cy="41" r="3.5" fill="#1a1a1a"/>
+      <circle cx="28" cy="40" r="1.5" fill="white"/>
+      <ellipse cx="35" cy="54" rx="8" ry="5" fill="#E07080"/>
+      <line x1="20" y1="52" x2="5" y2="48" stroke="#8B6914" stroke-width="1.5"/>
+      <line x1="20" y1="55" x2="4" y2="55" stroke="#8B6914" stroke-width="1.5"/>
+      <line x1="50" y1="52" x2="65" y2="48" stroke="#8B6914" stroke-width="1.5"/>
+      <line x1="50" y1="55" x2="66" y2="55" stroke="#8B6914" stroke-width="1.5"/>
+    </svg>`;
+    mole.addEventListener('click', (e)=>bonkMole(i,e));
+    mole.addEventListener('touchstart', (e)=>{e.preventDefault(); bonkMole(i,e.touches[0]);},{passive:false});
+    hole.appendChild(bg);
+    hole.appendChild(mole);
+    grid.appendChild(hole);
+    wamMoles.push({el:mole, up:false, bonked:false});
+    wamHoleTimers.push(null);
+  }
+}
+
+function startWam() {
+  wamScore=0; wamMiss=0; wamTimeLeft=30; wamActive=true;
+  document.getElementById('wam-score').textContent='0';
+  document.getElementById('wam-miss').textContent='0';
+  document.getElementById('wam-timer-bar').style.width='100%';
+  document.getElementById('wam-timer-bar').style.background='linear-gradient(90deg,#00b894,#55efc4)';
+  document.getElementById('wam-overlay').style.display='none';
+  buildWamGrid();
+  AC.resume();
+
+  // Spawn moles
+  let spawnDelay = 900;
+  function spawnLoop() {
+    if(!wamActive) return;
+    const available = wamMoles.map((_,i)=>i).filter(i=>!wamMoles[i].up && !wamMoles[i].bonked);
+    if(available.length>0) {
+      const idx = available[Math.floor(Math.random()*available.length)];
+      raiseMole(idx);
+    }
+    spawnDelay = Math.max(400, spawnDelay - 8);
+    wamSpawner = setTimeout(spawnLoop, spawnDelay);
+  }
+  spawnLoop();
+
+  // Timer
+  const timerBar = document.getElementById('wam-timer-bar');
+  wamTimer = setInterval(()=>{
+    wamTimeLeft--;
+    const pct = (wamTimeLeft/30)*100;
+    timerBar.style.width = pct+'%';
+    timerBar.style.background = pct>50
+      ? 'linear-gradient(90deg,#00b894,#55efc4)'
+      : pct>25 ? 'linear-gradient(90deg,#f9ca24,#f0932b)'
+      : 'linear-gradient(90deg,#d63031,#ff7675)';
+    if(wamTimeLeft<=0) endWam();
+  },1000);
+}
+
+function raiseMole(idx) {
+  if(!wamActive) return;
+  const m = wamMoles[idx];
+  m.up=true; m.bonked=false;
+  m.el.classList.add('up');
+  // Auto-lower after random time
+  const stayMs = 1200 + Math.random()*800;
+  wamHoleTimers[idx] = setTimeout(()=>{
+    if(m.up && !m.bonked) {
+      wamMiss++;
+      document.getElementById('wam-miss').textContent=wamMiss;
+    }
+    lowerMole(idx);
+  }, stayMs);
+}
+
+function lowerMole(idx) {
+  const m = wamMoles[idx];
+  m.up=false; m.bonked=false;
+  m.el.classList.remove('up','bonk');
+}
+
+function bonkMole(idx, e) {
+  if(!wamActive) return;
+  const m = wamMoles[idx];
+  if(!m.up || m.bonked) return;
+  m.bonked=true;
+  clearTimeout(wamHoleTimers[idx]);
+  m.el.classList.add('bonk');
+  m.el.classList.remove('up');
+  wamScore += 10;
+  document.getElementById('wam-score').textContent=wamScore;
+  AC.resume(); playSlapSound();
+
+  const phrase = wamPhrases[Math.floor(Math.random()*wamPhrases.length)];
+  const fx = document.getElementById('wam-hit-fx');
+  const word = document.createElement('div');
+  word.className='wam-hit-word';
+  word.textContent=phrase;
+  const holeEls = document.querySelectorAll('.wam-hole');
+  const hr = holeEls[idx].getBoundingClientRect();
+  const sr = document.getElementById('wam-scene').getBoundingClientRect();
+  word.style.left=(hr.left-sr.left+20)+'px';
+  word.style.top=(hr.top-sr.top+10)+'px';
+  fx.appendChild(word);
+  setTimeout(()=>word.remove(),900);
+
+  const r = m.el.getBoundingClientRect();
+  spawnParticles(e.clientX||r.left+35, e.clientY||r.top+40, 10);
+
+  setTimeout(()=>lowerMole(idx), 300);
+}
+
+function endWam() {
+  wamActive=false;
+  clearInterval(wamTimer);
+  clearTimeout(wamSpawner);
+  wamMoles.forEach((_,i)=>{ clearTimeout(wamHoleTimers[i]); lowerMole(i); });
+  playWinSound();
+  if(wamScore>=100) launchConfetti();
+  const overlay = document.getElementById('wam-overlay');
+  const icon = document.getElementById('wam-overlay-icon');
+  const title = document.getElementById('wam-overlay-title');
+  const sub = document.getElementById('wam-overlay-sub');
+  const btn = document.getElementById('wam-start-btn');
+  icon.textContent = wamScore>=150?'🏆':wamScore>=80?'🎉':'😅';
+  title.textContent = wamScore>=150?'Giler Hebat!':wamScore>=80?'Bagus Tu!':'Cuba Lagi!';
+  sub.textContent = `Markah: ${wamScore} | Terlepas: ${wamMiss}`;
+  btn.textContent = '🔨 Main Lagi!';
+  overlay.style.display='flex';
+}
+
+/* ═══════════════════════════
+   GAME 6 — CABUT NASIB
+═══════════════════════════ */
+const luckCards = [
+  {emoji:'🌟',cat:'Semangat Hari Ini',text:'Hari ni rezeki kau melimpah ruah! Customer yang baik sedang tunggu kau.',bonus:'Tip: Senyum je dulu, baki follow up nanti!'},
+  {emoji:'💪',cat:'Motivasi Kuat',text:'Kau dah buat kerja yang orang lain tak sanggup buat. Respect!',bonus:'Kau hero yang tak bertopeng 🦸'},
+  {emoji:'🍜',cat:'Nasib Makan',text:'Tengahari ni kau akan makan sesuatu yang sangat sedap. Jangan skip makan!',bonus:'Perut kenyang, semangat pun kenyang 😋'},
+  {emoji:'😂',cat:'Lawak Hari Ini',text:'Customer kau hari ni macam WiFi — ada masa ada, ada masa hilang.',bonus:'Gelak dulu, tension belakang kira 😄'},
+  {emoji:'🎯',cat:'Ramalan Kerja',text:'Hari ni kau akan close at least satu case yang dah lama pending. Percaya je!',bonus:'Manifestasi dulu, usaha kemudian!'},
+  {emoji:'☕',cat:'Petua Ajaib',text:'Minum air yang banyak hari ni. Otak fresh, fikiran cerah, customer pun rasa.',bonus:'Kopi = bonus, air = wajib 💧'},
+  {emoji:'🌈',cat:'Pelangi Lepas Hujan',text:'Lepas hari yang penat ni, ada benda best tunggu kau balik rumah!',bonus:'Entah apa, tapi best. Percaya je 🌈'},
+  {emoji:'🎲',cat:'Cabutan Misteri',text:'Kau akan dapat mesej baik dari seseorang hari ni. Keep an eye on phone!',bonus:'Bukan customer — orang yang kau suka 😏'},
+  {emoji:'🦁',cat:'Kuasa Dalaman',text:'Hari ni kau adalah singa dalam badan CS. Tak ada yang boleh tahan kau!',bonus:'RAWR! 🦁 (dalam hati je, jangan jerit kat customer)'},
+  {emoji:'🍀',cat:'Tuah Istimewa',text:'Nasib kau hari ni: 100% akan ada sesuatu yang buat kau senyum sorang-sorang.',bonus:'Screenshot moment tu kalau boleh 📸'},
+];
+let luckUsed=[];
+
+function initLuckGame() {
+  const deck = document.getElementById('card-deck');
+  deck.addEventListener('click', doCabutNasib);
+  deck.addEventListener('touchstart', e=>{e.preventDefault(); doCabutNasib();},{passive:false});
+}
+
+function doCabutNasib() {
+  AC.resume(); playPopSound();
+  if(luckUsed.length>=luckCards.length) luckUsed=[];
+  const available = luckCards.filter((_,i)=>!luckUsed.includes(i));
+  const pick = Math.floor(Math.random()*available.length);
+  const realIdx = luckCards.indexOf(available[pick]);
+  luckUsed.push(realIdx);
+  const card = luckCards[realIdx];
+
+  // Animate deck
+  const topCard = document.getElementById('top-card');
+  topCard.style.transition='transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s';
+  topCard.style.transform='rotate(20deg) translateX(200px) translateY(-50px)';
+  topCard.style.opacity='0';
+
+  document.getElementById('card-deck-wrap').style.display='none';
+
+  setTimeout(()=>{
+    topCard.style.transition='';
+    topCard.style.transform='';
+    topCard.style.opacity='';
+    document.getElementById('luck-card-emoji').textContent=card.emoji;
+    document.getElementById('luck-card-category').textContent=card.cat;
+    document.getElementById('luck-card-text').textContent=card.text;
+    document.getElementById('luck-card-bonus').textContent=card.bonus;
+    document.getElementById('luck-result').style.display='block';
+    launchConfetti();
+    playWinSound();
+  },400);
+}
+
+function resetLuck() {
+  document.getElementById('luck-result').style.display='none';
+  document.getElementById('card-deck-wrap').style.display='block';
+  playPopSound();
+}
+
+// Init luck game when tab 5 clicked
+document.querySelectorAll('.tab-btn')[5].addEventListener('click', ()=>{
+  setTimeout(initLuckGame, 100);
+});
+
+</script>
+</body>
+</html>
