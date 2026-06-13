@@ -98,34 +98,76 @@
   .vis-bar.paused { animation-play-state: paused; }
 
   /* ── GAME TABS ── */
-  #tabs {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
+  /* ── GAME SELECTOR ── */
+  #game-selector {
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
     padding: 0 1rem;
-    margin-bottom: 1.5rem;
+    position: relative;
   }
-  .tab-btn {
+  #game-select-btn {
+    width: 100%;
     font-family: 'Fredoka One', cursive;
-    font-size: 1rem;
-    padding: 10px 20px;
+    font-size: 1.1rem;
+    padding: 14px 24px;
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    transition: all 0.2s;
-    background: rgba(255,255,255,0.25);
-    color: white;
-    letter-spacing: 0.5px;
-    backdrop-filter: blur(4px);
-  }
-  .tab-btn:hover { background: rgba(255,255,255,0.4); transform: translateY(-2px); }
-  .tab-btn.active {
     background: white;
     color: var(--purple);
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    transform: translateY(-3px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    transition: transform 0.15s;
   }
+  #game-select-btn:hover { transform: scale(1.02); }
+  #game-select-btn .arrow { transition: transform 0.2s; font-size:14px; }
+  #game-select-btn.open .arrow { transform: rotate(180deg); }
+  #game-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 1rem; right: 1rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    z-index: 100;
+    overflow: hidden;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  #game-dropdown.open { display: block; animation: dropIn 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes dropIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+  .drop-item {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 13px 20px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.15s;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .drop-item:last-child { border-bottom: none; }
+  .drop-item:hover { background: #f8f4ff; }
+  .drop-item.active { background: linear-gradient(135deg,#667eea,#764ba2); color: white; }
+  .drop-item .item-num { 
+    background: rgba(0,0,0,0.08); border-radius: 50%;
+    width:26px; height:26px; display:flex; align-items:center; justify-content:center;
+    font-size:12px; flex-shrink:0;
+  }
+  .drop-item.active .item-num { background: rgba(255,255,255,0.2); }
+  /* hide old tabs */
+  #tabs { display: none; }
+  .tab-btn { display: none; }
 
   /* ── GAME CONTAINER ── */
   #game-area {
@@ -1016,22 +1058,30 @@
   </div>
 </header>
 
-<div id="tabs">
-  <button class="tab-btn active" onclick="switchGame(0)">👟 Hentam Orang</button>
-  <button class="tab-btn" onclick="switchGame(1)">🫧 Pecah Buih</button>
-  <button class="tab-btn" onclick="switchGame(2)">📱 Hancur Telefon</button>
-  <button class="tab-btn" onclick="switchGame(3)">💬 Papan Luah</button>
-  <button class="tab-btn" onclick="switchGame(4)">🔨 Pukul Tikus</button>
-  <button class="tab-btn" onclick="switchGame(5)">🃏 Cabut Nasib</button>
-  <button class="tab-btn" onclick="switchGame(6)">🎈 Pecah Belon</button>
-  <button class="tab-btn" onclick="switchGame(7)">🍉 Belah Buah</button>
-  <button class="tab-btn" onclick="switchGame(8)">🎵 Ketuk Irama</button>
-  <button class="tab-btn" onclick="switchGame(9)">🎳 Bowling Gila</button>
-  <button class="tab-btn" onclick="switchGame(10)">🎰 Slot Nasib</button>
-  <button class="tab-btn" onclick="switchGame(11)">🌋 Letup Gunung</button>
-  <button class="tab-btn" onclick="switchGame(12)">🐔 Tumbuk Ayam</button>
-  <button class="tab-btn" onclick="switchGame(13)">✂️ Potong Tali</button>
-  <button class="tab-btn" onclick="switchGame(14)">🐟 Tangkap Ikan</button>
+<div id="tabs"></div>
+
+<div id="game-selector">
+  <button id="game-select-btn" onclick="toggleDropdown()">
+    <span id="current-game-label">👟 Hentam Orang</span>
+    <span class="arrow">▼</span>
+  </button>
+  <div id="game-dropdown">
+    <button class="drop-item active" onclick="selectGame(0)"><span class="item-num">1</span>👟 Hentam Orang</button>
+    <button class="drop-item" onclick="selectGame(1)"><span class="item-num">2</span>🫧 Pecah Buih</button>
+    <button class="drop-item" onclick="selectGame(2)"><span class="item-num">3</span>📱 Hancur Telefon</button>
+    <button class="drop-item" onclick="selectGame(3)"><span class="item-num">4</span>💬 Papan Luah</button>
+    <button class="drop-item" onclick="selectGame(4)"><span class="item-num">5</span>🔨 Pukul Tikus</button>
+    <button class="drop-item" onclick="selectGame(5)"><span class="item-num">6</span>🃏 Cabut Nasib</button>
+    <button class="drop-item" onclick="selectGame(6)"><span class="item-num">7</span>🎈 Pecah Belon</button>
+    <button class="drop-item" onclick="selectGame(7)"><span class="item-num">8</span>🍉 Belah Buah</button>
+    <button class="drop-item" onclick="selectGame(8)"><span class="item-num">9</span>🎵 Ketuk Irama</button>
+    <button class="drop-item" onclick="selectGame(9)"><span class="item-num">10</span>🎳 Bowling Gila</button>
+    <button class="drop-item" onclick="selectGame(10)"><span class="item-num">11</span>🎰 Slot Nasib</button>
+    <button class="drop-item" onclick="selectGame(11)"><span class="item-num">12</span>🌋 Letup Gunung</button>
+    <button class="drop-item" onclick="selectGame(12)"><span class="item-num">13</span>🐔 Tumbuk Ayam</button>
+    <button class="drop-item" onclick="selectGame(13)"><span class="item-num">14</span>✂️ Potong Tali</button>
+    <button class="drop-item" onclick="selectGame(14)"><span class="item-num">15</span>🐟 Tangkap Ikan</button>
+  </div>
 </div>
 
 <div id="game-area">
@@ -3012,6 +3062,42 @@ function endFish() {
 
 // Init bowling when tab opened
 document.querySelectorAll('.tab-btn')[9].addEventListener('click', ()=>setTimeout(initBowling,100));
+
+const GAME_NAMES = ['👟 Hentam Orang', '🫧 Pecah Buih', '📱 Hancur Telefon', '💬 Papan Luah', '🔨 Pukul Tikus', '🃏 Cabut Nasib', '🎈 Pecah Belon', '🍉 Belah Buah', '🎵 Ketuk Irama', '🎳 Bowling Gila', '🎰 Slot Nasib', '🌋 Letup Gunung', '🐔 Tumbuk Ayam', '✂️ Potong Tali', '🐟 Tangkap Ikan'];
+
+function toggleDropdown() {
+  const btn = document.getElementById('game-select-btn');
+  const dd = document.getElementById('game-dropdown');
+  const isOpen = dd.classList.contains('open');
+  btn.classList.toggle('open', !isOpen);
+  dd.classList.toggle('open', !isOpen);
+}
+
+function selectGame(idx) {
+  // Update dropdown UI
+  document.querySelectorAll('.drop-item').forEach((el,i) => el.classList.toggle('active', i===idx));
+  document.getElementById('current-game-label').textContent = GAME_NAMES[idx];
+  // Close dropdown
+  document.getElementById('game-select-btn').classList.remove('open');
+  document.getElementById('game-dropdown').classList.remove('open');
+  // Switch panel
+  switchGame(idx);
+  // Special inits
+  if(idx===9) setTimeout(initBowling,100);
+  if(idx===11) setTimeout(initVolcano,100);
+  if(idx===3) initLuah();
+  if(idx===5) setTimeout(initLuckGame,100);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  const sel = document.getElementById('game-selector');
+  if(sel && !sel.contains(e.target)) {
+    document.getElementById('game-select-btn').classList.remove('open');
+    document.getElementById('game-dropdown').classList.remove('open');
+  }
+});
+
 
 </script>
 </body>
