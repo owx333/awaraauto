@@ -474,28 +474,445 @@
     .card, .sub, .sum, .res { page-break-inside: avoid; box-shadow: none !important; }
     .sub, .sum, .res { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
-  </style>
+  
+  /* ===== DISCO GATE / HK NEON OVERHAUL ===== */
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@700;900&display=swap');
+
+  :root {
+    --neon-r:#ff2d55;--neon-o:#ff9f0a;--neon-y:#ffd60a;--neon-g:#30d158;
+    --neon-b:#0a84ff;--neon-p:#bf5af2;--neon-c:#5ac8fa;
+    --glass-bg:rgba(255,255,255,.08);
+    --glass-border:rgba(255,255,255,.18);
+    --glass-blur:blur(20px);
+  }
+
+  /* GATE FULL DISCO */
+  .gate{
+    position:fixed;inset:0;z-index:200;overflow:hidden;
+    background:#0a0010;
+    display:flex;align-items:center;justify-content:center;padding:1.5rem;
+  }
+
+  /* Animated disco background */
+  .gate::before{
+    content:'';position:absolute;inset:-50%;
+    background:conic-gradient(
+      from 0deg,
+      #ff2d5540 0%,#ff9f0a40 15%,#ffd60a40 30%,
+      #30d15840 45%,#0a84ff40 60%,#bf5af240 75%,
+      #ff2d5540 90%,#ff2d5540 100%
+    );
+    animation:discoBG 4s linear infinite;
+    transform-origin:center;
+  }
+  @keyframes discoBG{to{transform:rotate(360deg)}}
+
+  .gate::after{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 50%,rgba(0,0,0,.6) 30%,transparent 80%);
+    pointer-events:none;
+  }
+
+  .gate-inner{
+    max-width:420px;width:100%;text-align:center;
+    position:relative;z-index:2;
+  }
+
+  /* HK neon sign marquee strip */
+  .gate-hk-sign{
+    display:flex;gap:0;margin-bottom:1.5rem;overflow:hidden;
+    border-radius:8px;border:1px solid rgba(255,255,255,.15);
+    background:rgba(0,0,0,.5);
+  }
+  .hk-char{
+    flex:1;padding:.4rem .1rem;text-align:center;
+    font-family:'Noto Sans HK','Geist',sans-serif;
+    font-weight:900;font-size:1rem;
+    animation:neonFlicker 3s ease-in-out infinite;
+  }
+  .hk-char:nth-child(1){color:var(--neon-r);text-shadow:0 0 8px var(--neon-r),0 0 20px var(--neon-r);animation-delay:0s}
+  .hk-char:nth-child(2){color:var(--neon-o);text-shadow:0 0 8px var(--neon-o),0 0 20px var(--neon-o);animation-delay:.2s}
+  .hk-char:nth-child(3){color:var(--neon-y);text-shadow:0 0 8px var(--neon-y),0 0 20px var(--neon-y);animation-delay:.4s}
+  .hk-char:nth-child(4){color:var(--neon-g);text-shadow:0 0 8px var(--neon-g),0 0 20px var(--neon-g);animation-delay:.6s}
+  .hk-char:nth-child(5){color:var(--neon-b);text-shadow:0 0 8px var(--neon-b),0 0 20px var(--neon-b);animation-delay:.8s}
+  .hk-char:nth-child(6){color:var(--neon-p);text-shadow:0 0 8px var(--neon-p),0 0 20px var(--neon-p);animation-delay:1s}
+  .hk-char:nth-child(7){color:var(--neon-c);text-shadow:0 0 8px var(--neon-c),0 0 20px var(--neon-c);animation-delay:1.2s}
+  .hk-char:nth-child(8){color:var(--neon-r);text-shadow:0 0 8px var(--neon-r),0 0 20px var(--neon-r);animation-delay:1.4s}
+
+  @keyframes neonFlicker{
+    0%,100%{opacity:1}
+    92%{opacity:1}93%{opacity:.3}94%{opacity:1}97%{opacity:.6}98%{opacity:1}
+  }
+
+  /* Main AWARA brand on gate */
+  .gate-brand{
+    font-family:'Geist','Helvetica Neue',sans-serif;
+    font-weight:900;font-size:3.5rem;line-height:1;
+    letter-spacing:.08em;text-transform:uppercase;
+    background:linear-gradient(135deg,#ffd60a,#ff9f0a,#ff2d55,#bf5af2,#0a84ff,#30d158,#ffd60a);
+    background-size:300% 300%;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    animation:rainbowShift 3s ease infinite;
+    margin-bottom:.5rem;
+  }
+  @keyframes rainbowShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+  .gate-mark{display:none}
+
+  .gate-sub{
+    font-size:.72rem;color:rgba(255,255,255,.5);
+    letter-spacing:.3em;text-transform:uppercase;
+    margin-top:.25rem;margin-bottom:2rem;
+  }
+
+  /* Glass input card */
+  .gate-card{
+    background:var(--glass-bg);
+    backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border);
+    border-radius:20px;padding:2rem;
+    box-shadow:0 8px 40px rgba(0,0,0,.4);
+  }
+
+  .gate-input{
+    width:100%;padding:1rem 1.25rem;
+    background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.2);
+    color:#fff;
+    font-family:var(--mono);font-size:1.4rem;
+    letter-spacing:.6em;text-align:center;
+    border-radius:12px;outline:none;
+    transition:all .25s;
+    box-sizing:border-box;
+  }
+  .gate-input::placeholder{color:rgba(255,255,255,.25);letter-spacing:.6em}
+  .gate-input:focus{
+    border-color:var(--neon-y);
+    box-shadow:0 0 0 3px rgba(255,214,10,.2),0 0 20px rgba(255,214,10,.15);
+  }
+
+  .gate-btn{
+    width:100%;margin-top:.875rem;padding:1rem;
+    background:linear-gradient(135deg,#ff9f0a,#ff2d55);
+    color:#fff;border:none;
+    font-family:var(--sans);font-weight:700;font-size:.85rem;
+    letter-spacing:.2em;text-transform:uppercase;
+    border-radius:12px;cursor:pointer;
+    transition:all .2s;
+    box-shadow:0 4px 20px rgba(255,45,85,.4);
+  }
+  .gate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,45,85,.6)}
+  .gate-btn:active{transform:scale(.98)}
+
+  .gate-err{margin-top:.875rem;font-size:.78rem;color:var(--neon-r);min-height:1.2em;
+    text-shadow:0 0 8px var(--neon-r)}
+
+  /* Disco balls / floating particles */
+  .disco-particle{
+    position:absolute;border-radius:50%;pointer-events:none;
+    animation:floatParticle linear infinite;
+    opacity:0;
+  }
+  @keyframes floatParticle{
+    0%{opacity:0;transform:translateY(0) scale(0)}
+    10%{opacity:.8}
+    90%{opacity:.4}
+    100%{opacity:0;transform:translateY(-100vh) scale(1.5)}
+  }
+
+  /* ===== APP - GLASS UI OVERHAUL ===== */
+  html{background:#0a0a1a !important}
+  body{background:linear-gradient(135deg,#0a0a1a 0%,#0d1a2e 40%,#1a0d2e 100%) !important;
+       background-attachment:fixed !important}
+  body::before{display:none}
+
+  /* Header glass */
+  .head{
+    background:rgba(28,37,65,.6) !important;
+    backdrop-filter:blur(24px) !important;-webkit-backdrop-filter:blur(24px) !important;
+    border:1px solid rgba(255,255,255,.1) !important;
+    border-bottom:2px solid var(--neon-o) !important;
+    box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(255,159,10,.2) !important;
+  }
+
+  /* Brand rainbow */
+  .brand{
+    background:linear-gradient(90deg,#ffd60a,#ff9f0a,#ff2d55);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    text-shadow:none !important;
+  }
+
+  /* Glass cards */
+  .card{
+    background:rgba(255,255,255,.06) !important;
+    backdrop-filter:blur(16px) !important;-webkit-backdrop-filter:blur(16px) !important;
+    border:1px solid rgba(255,255,255,.12) !important;
+    box-shadow:0 4px 24px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+  .card-title{color:#fff !important}
+  .field-name{color:rgba(255,255,255,.85) !important}
+  .field-input{
+    background:rgba(0,0,0,.3) !important;
+    border-color:rgba(255,255,255,.15) !important;
+    color:#fff !important;
+  }
+  .field-input:focus{
+    border-color:var(--neon-y) !important;
+    box-shadow:0 0 0 3px rgba(255,214,10,.15) !important;
+  }
+
+  /* Summary glass */
+  .sum{
+    background:rgba(28,37,65,.5) !important;
+    backdrop-filter:blur(20px) !important;-webkit-backdrop-filter:blur(20px) !important;
+    border:1px solid rgba(255,255,255,.1) !important;
+  }
+
+  /* Result panel glass */
+  .res{
+    background:rgba(10,10,30,.6) !important;
+    backdrop-filter:blur(20px) !important;-webkit-backdrop-filter:blur(20px) !important;
+    border:1px solid rgba(249,115,22,.3) !important;
+  }
+
+  /* Tab nav glass */
+  .tabs{
+    background:rgba(255,255,255,.04);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:12px;padding:.25rem;margin-bottom:1.5rem;
+  }
+  .tab{color:rgba(255,255,255,.45) !important;border-radius:8px !important}
+  .tab:hover{color:rgba(255,255,255,.8) !important;background:rgba(255,255,255,.06) !important}
+  .tab.active{
+    color:#ffd60a !important;
+    background:rgba(255,214,10,.12) !important;
+    border-color:transparent !important;
+    box-shadow:0 0 12px rgba(255,214,10,.15) !important;
+  }
+
+  /* Input / select glass */
+  .input{
+    background:rgba(0,0,0,.3) !important;
+    border-color:rgba(255,255,255,.15) !important;
+    color:#fff !important;
+  }
+  .input:focus{border-color:var(--neon-y) !important}
+
+  /* Sub totals */
+  .sub{
+    background:rgba(28,37,65,.7) !important;
+    border:1px solid rgba(255,255,255,.1) !important;
+  }
+
+  /* ===== CELEBRATION OVERLAY ===== */
+  #celebOverlay{
+    position:fixed;inset:0;z-index:9999;pointer-events:none;
+    display:none;
+  }
+  .celeb-banner{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+    background:rgba(10,10,30,.92);
+    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border:2px solid var(--neon-y);
+    border-radius:24px;padding:2.5rem 3rem;text-align:center;
+    box-shadow:0 0 60px rgba(255,214,10,.3),0 0 120px rgba(255,214,10,.1);
+    animation:celebPop .5s cubic-bezier(.175,.885,.32,1.275) forwards;
+    max-width:360px;width:90%;
+  }
+  @keyframes celebPop{
+    0%{transform:translate(-50%,-50%) scale(0) rotate(-10deg)}
+    70%{transform:translate(-50%,-50%) scale(1.05) rotate(2deg)}
+    100%{transform:translate(-50%,-50%) scale(1) rotate(0)}
+  }
+  .celeb-emoji{font-size:3rem;display:block;margin-bottom:.5rem;animation:bounce .6s ease infinite alternate}
+  @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+  .celeb-title{
+    font-family:var(--sans);font-weight:900;font-size:1.4rem;
+    background:linear-gradient(135deg,#ffd60a,#ff9f0a);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    margin-bottom:.4rem;
+  }
+  .celeb-msg{font-size:.85rem;color:rgba(255,255,255,.7);line-height:1.6}
+  .celeb-bar{
+    margin-top:1rem;height:6px;border-radius:3px;
+    background:rgba(255,255,255,.1);overflow:hidden;
+  }
+  .celeb-bar-fill{
+    height:100%;border-radius:3px;
+    background:linear-gradient(90deg,var(--neon-r),var(--neon-o),var(--neon-y),var(--neon-g));
+    animation:progressFill 2s ease forwards;
+  }
+  @keyframes progressFill{from{width:0}to{width:100%}}
+
+  /* Confetti */
+  .confetti-piece{
+    position:fixed;pointer-events:none;border-radius:2px;
+    animation:confettiFall linear forwards;
+  }
+  @keyframes confettiFall{
+    0%{opacity:1;top:-10px}
+    100%{opacity:0;top:110vh}
+  }
+
+  /* ===== NEON SIGN STRIPS IN HEADER ===== */
+  .neon-strip{
+    display:flex;gap:4px;align-items:center;flex-wrap:wrap;
+    margin-top:.4rem;
+  }
+  .neon-pill{
+    font-size:.55rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    padding:.18rem .55rem;border-radius:20px;
+    animation:neonFlicker 2s ease infinite;
+  }
+  .neon-pill.r{background:rgba(255,45,85,.15);color:var(--neon-r);border:1px solid rgba(255,45,85,.4)}
+  .neon-pill.o{background:rgba(255,159,10,.15);color:var(--neon-o);border:1px solid rgba(255,159,10,.4);animation-delay:.4s}
+  .neon-pill.g{background:rgba(48,209,88,.15);color:var(--neon-g);border:1px solid rgba(48,209,88,.4);animation-delay:.8s}
+  .neon-pill.b{background:rgba(10,132,255,.15);color:var(--neon-b);border:1px solid rgba(10,132,255,.4);animation-delay:1.2s}
+
+  /* HK neon sign bar on top of page */
+  .hk-header-sign{
+    display:flex;justify-content:center;gap:0;
+    margin-bottom:1rem;
+    background:rgba(0,0,0,.4);
+    border-radius:0 0 12px 12px;
+    margin:-1.75rem -1.25rem 1.5rem;
+    padding:.35rem 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    overflow:hidden;
+  }
+  .hk-header-char{
+    font-family:'Noto Sans HK','Geist',sans-serif;
+    font-weight:900;font-size:.9rem;
+    padding:.15rem .5rem;
+    animation:neonFlicker 3s ease-in-out infinite;
+  }
+
+  /* Calculator result cells - glass */
+  .res-cell{
+    background:rgba(255,255,255,.04) !important;
+    border:1px solid rgba(255,255,255,.12) !important;
+  }
+  .res-cell.hl{
+    border-color:rgba(249,115,22,.5) !important;
+    background:rgba(249,115,22,.06) !important;
+    box-shadow:0 0 20px rgba(249,115,22,.15) !important;
+  }
+
+  /* Status cards */
+  .cat{
+    background:rgba(255,255,255,.05) !important;
+    border:1px solid rgba(255,255,255,.1) !important;
+  }
+
+  /* Code rows */
+  .code-row{
+    background:rgba(255,255,255,.04) !important;
+    border:1px solid rgba(255,255,255,.1) !important;
+  }
+  .code-row:hover{
+    background:rgba(255,255,255,.08) !important;
+    border-color:rgba(48,209,88,.3) !important;
+    transform:translateY(-2px);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px}
+
+  /* Text fixes for dark bg */
+  .field-note{color:rgba(255,255,255,.4) !important}
+  .field-tag{background:rgba(255,255,255,.08) !important;color:rgba(255,255,255,.5) !important;border-color:rgba(255,255,255,.1) !important}
+  .sum-cell{background:rgba(255,255,255,.06) !important;border-color:rgba(255,255,255,.1) !important}
+  .sum-cell-lbl{color:rgba(255,255,255,.5) !important}
+  .sum-cell-val{color:#fff !important}
+  .sub-lbl{color:rgba(255,255,255,.6) !important}
+  .oc-row{background:rgba(255,255,255,.04) !important;border-color:rgba(255,255,255,.08) !important}
+  .oc-lbl{color:rgba(255,255,255,.85) !important}
+  .mode-info{color:rgba(255,255,255,.4) !important}
+  .cat-title{color:rgba(255,255,255,.85) !important}
+  .cat-item{background:rgba(255,255,255,.05) !important;border-color:rgba(255,255,255,.08) !important;color:rgba(255,255,255,.7) !important}
+  .cat-item:hover{background:rgba(255,255,255,.1) !important;color:#fff !important}
+  .check-intro-title{color:#fff !important}
+  .check-intro-sub{color:rgba(255,255,255,.5) !important}
+  .check-intro-eyebrow{color:var(--neon-o) !important}
+  .pkg-card{background:rgba(255,255,255,.05) !important;border-color:rgba(255,255,255,.1) !important}
+  .pkg-title{color:#fff !important}
+  .adj{background:rgba(255,255,255,.04) !important}
+  .foot{color:rgba(255,255,255,.3) !important;border-color:rgba(255,255,255,.08) !important}
+  .foot em{color:var(--neon-y) !important}
+  .item-x{background:rgba(255,255,255,.06) !important;border-color:rgba(255,255,255,.1) !important;color:rgba(255,255,255,.4) !important}
+  .btn-add{background:rgba(255,255,255,.04) !important;border-color:rgba(255,159,10,.3) !important;color:rgba(255,159,10,.8) !important}
+  .btn-add:hover{background:rgba(255,159,10,.12) !important;border-color:var(--neon-o) !important;border-style:solid !important}
+  .status-name{color:#fff !important}
+  select.input option{background:#1a1a3e;color:#fff}
+  #chopResults .code-row-code{box-shadow:0 2px 6px rgba(249,115,22,.4) !important}
+  #chopResults .code-row-name{color:rgba(255,255,255,.9) !important}
+  #chopResultInfo{color:rgba(255,255,255,.35) !important}
+  .overlap-items .input-desc,
+  .input{color:rgba(255,255,255,.85) !important}
+  .res-eyebrow{color:var(--neon-o) !important}
+  .res-title{color:#fff !important}
+  .res-formula{color:rgba(255,255,255,.5) !important}
+  .res-tag{color:rgba(255,255,255,.7) !important}
+  .oc-formula{color:rgba(255,255,255,.35) !important}
+  .res-head{border-color:rgba(255,255,255,.1) !important}
+  .mode-bar{border-color:rgba(255,214,10,.1) !important}
+
+  /* Celebration messages pool */
+
+</style>
 </head>
 <body>
 
 <div class="gate" id="gate">
+  <div id="discoParticles" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
   <div class="gate-inner">
-    <div class="gate-mark">A</div>
+    <div class="gate-hk-sign">
+      <span class="hk-char">貸</span>
+      <span class="hk-char">款</span>
+      <span class="hk-char">資</span>
+      <span class="hk-char">格</span>
+      <span class="hk-char">計</span>
+      <span class="hk-char">算</span>
+      <span class="hk-char">器</span>
+      <span class="hk-char">★</span>
+    </div>
     <div class="gate-brand">AWARA</div>
-    <div class="gate-sub">Loan Eligibility · Restricted</div>
-    <input type="password" class="gate-input" id="gateInput" placeholder="••••" maxlength="20" autocomplete="off" inputmode="numeric">
-    <button class="gate-btn" id="gateBtn">Enter</button>
-    <div class="gate-err" id="gateErr"></div>
+    <div class="gate-sub">Loan Eligibility · Restricted Access</div>
+    <div class="gate-card">
+      <input type="password" class="gate-input" id="gateInput" placeholder="••••" maxlength="20" autocomplete="off" inputmode="numeric">
+      <button class="gate-btn" id="gateBtn">🚀 Enter System</button>
+      <div class="gate-err" id="gateErr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CELEBRATION OVERLAY -->
+<div id="celebOverlay">
+  <div class="celeb-banner" id="celebBanner">
+    <span class="celeb-emoji" id="celebEmoji">🎉</span>
+    <div class="celeb-title" id="celebTitle">Selamat!</div>
+    <div class="celeb-msg" id="celebMsg">Anda semakin hampir ke arah kejayaan!</div>
+    <div class="celeb-bar"><div class="celeb-bar-fill" id="celebBarFill"></div></div>
   </div>
 </div>
 
 <div class="app" id="app">
   <header class="head">
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--neon-r),var(--neon-o),var(--neon-y),var(--neon-g),var(--neon-b),var(--neon-p),var(--neon-r));background-size:200% 100%;animation:rainbowShift 3s linear infinite;opacity:.8"></div>
     <div class="brand-wrap">
-      <div class="brand-mark">A</div>
+      <div class="brand-mark" style="background:linear-gradient(135deg,rgba(255,214,10,.2),rgba(255,159,10,.1));border-color:var(--neon-y)">A</div>
       <div>
         <div class="brand">AWARA</div>
         <div class="tagline">Loan Eligibility · Created by Wilson</div>
+        <div class="neon-strip">
+          <span class="neon-pill r">Loan</span>
+          <span class="neon-pill o">CEF</span>
+          <span class="neon-pill g">GLC</span>
+          <span class="neon-pill b">Koperasi</span>
+        </div>
       </div>
     </div>
     <div class="head-right">
@@ -993,6 +1410,7 @@
       try { sessionStorage.setItem('pt_auth', '1'); } catch(e){}
       enter();
     } else {
+      Sound.play('error');
       gateErr.textContent = 'Wrong password';
       gateInput.value = '';
       setTimeout(() => { gateErr.textContent = ''; }, 1800);
@@ -1004,6 +1422,7 @@
   function enter() {
     gate.style.display = 'none';
     app.style.display = 'block';
+    Sound.init();
     initApp();
   }
 
@@ -1167,6 +1586,12 @@
     }
 
     renderResults(totalP, totalD);
+    if (totalP > 0 && typeof showCelebration === 'function') {
+      if (!calc._lastVal || Math.abs(calc._lastVal - totalP) > 50) {
+        calc._lastVal = totalP;
+        setTimeout(showCelebration, 400);
+      }
+    }
   }
 
   function renderResults(pendapatan, potongan) {
@@ -4293,6 +4718,136 @@
     sheetFilter.addEventListener('change', renderChop);
     renderChop();
   }
+
+
+  /* ===== DISCO PARTICLES ON GATE ===== */
+  (function spawnParticles(){
+    const container = document.getElementById('discoParticles');
+    if (!container) return;
+    const cols=['#ff2d55','#ff9f0a','#ffd60a','#30d158','#0a84ff','#bf5af2','#5ac8fa','#fff'];
+    function spawn(){
+      const el = document.createElement('div');
+      el.className = 'disco-particle';
+      const size = Math.random()*8+4;
+      el.style.cssText = `
+        width:${size}px;height:${size}px;
+        left:${Math.random()*100}%;
+        top:${100 + Math.random()*20}%;
+        background:${cols[Math.floor(Math.random()*cols.length)]};
+        animation-duration:${3+Math.random()*4}s;
+        animation-delay:${Math.random()*2}s;
+        box-shadow:0 0 ${size*2}px currentColor;
+      `;
+      container.appendChild(el);
+      setTimeout(()=>el.remove(), 7000);
+    }
+    setInterval(spawn, 200);
+    for(let i=0;i<15;i++) setTimeout(spawn, i*100);
+  })();
+
+  /* ===== SOUND ENGINE (Web Audio API) ===== */
+  const Sound = {
+    ctx: null,
+    init() {
+      try { this.ctx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e){}
+    },
+    play(type) {
+      if (!this.ctx) this.init();
+      if (!this.ctx) return;
+      try {
+        if (type === 'success') this._fanfare();
+        else if (type === 'click') this._click();
+        else if (type === 'error') this._error();
+      } catch(e){}
+    },
+    _note(freq, start, dur, vol=0.3, wave='sine') {
+      const o = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      o.connect(g); g.connect(this.ctx.destination);
+      o.type = wave; o.frequency.value = freq;
+      g.gain.setValueAtTime(0, start);
+      g.gain.linearRampToValueAtTime(vol, start + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+      o.start(start); o.stop(start + dur + 0.05);
+    },
+    _fanfare() {
+      const t = this.ctx.currentTime;
+      const melody = [523,659,784,1047,784,1047,1319];
+      melody.forEach((f,i) => this._note(f, t + i*0.12, 0.18, 0.25, 'triangle'));
+      this._note(262, t, 0.5, 0.15, 'sine');
+      this._note(330, t+0.1, 0.5, 0.15, 'sine');
+    },
+    _click() {
+      const t = this.ctx.currentTime;
+      this._note(880, t, 0.06, 0.12, 'square');
+    },
+    _error() {
+      const t = this.ctx.currentTime;
+      this._note(220, t, 0.15, 0.2, 'sawtooth');
+      this._note(180, t+0.15, 0.15, 0.2, 'sawtooth');
+    }
+  };
+
+  /* ===== CELEBRATION SYSTEM ===== */
+  const CELEB_MSGS = [
+    { emoji:'🎉', title:'Tahniah!', msg:'Anda semakin hampir ke arah kejayaan kewangan!' },
+    { emoji:'🚀', title:'Mantap!', msg:'Satu langkah lagi menuju impian anda!' },
+    { emoji:'💪', title:'Syabas!', msg:'Kalkulator telah selesai. Teruskan usaha!' },
+    { emoji:'⭐', title:'Luar Biasa!', msg:'Anda dah tahu berapa boleh pinjam. Jom buat!' },
+    { emoji:'🏆', title:'Hebat!', msg:'Maklumat loan anda sudah bersedia!' },
+    { emoji:'🌟', title:'Best!', msg:'Impian anda ada nombor sekarang. Go go go!' },
+    { emoji:'🎊', title:'Wah!', msg:'Kira selesai! Lebih dekat dengan rumah impian!' },
+    { emoji:'💎', title:'Power!', msg:'Anda dah buat kiraan yang betul. Terus maju!' },
+  ];
+
+  function spawnConfetti() {
+    const cols = ['#ff2d55','#ff9f0a','#ffd60a','#30d158','#0a84ff','#bf5af2','#fff'];
+    for (let i = 0; i < 60; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      const size = Math.random()*8+4;
+      const col = cols[Math.floor(Math.random()*cols.length)];
+      el.style.cssText = `
+        width:${size}px;height:${size * (Math.random()>0.5?1:2.5)}px;
+        left:${Math.random()*100}vw;
+        background:${col};
+        transform:rotate(${Math.random()*360}deg);
+        animation-duration:${2+Math.random()*2}s;
+        animation-delay:${Math.random()*0.8}s;
+        opacity:1;
+      `;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(), 4000);
+    }
+  }
+
+  function showCelebration() {
+    const overlay = document.getElementById('celebOverlay');
+    const banner = document.getElementById('celebBanner');
+    const msg = CELEB_MSGS[Math.floor(Math.random()*CELEB_MSGS.length)];
+    document.getElementById('celebEmoji').textContent = msg.emoji;
+    document.getElementById('celebTitle').textContent = msg.title;
+    document.getElementById('celebMsg').textContent = msg.msg;
+    const fill = document.getElementById('celebBarFill');
+    if (fill) { fill.style.animation='none'; fill.offsetHeight; fill.style.animation='progressFill 2s ease forwards'; }
+    overlay.style.display = 'block';
+    banner.style.animation = 'none';
+    banner.offsetHeight;
+    banner.style.animation = 'celebPop .5s cubic-bezier(.175,.885,.32,1.275) forwards';
+    spawnConfetti();
+    Sound.play('success');
+    setTimeout(()=>{ overlay.style.display='none'; }, 3500);
+  }
+
+  overlay?.addEventListener?.('click', ()=>{ document.getElementById('celebOverlay').style.display='none'; });
+  document.getElementById('celebOverlay')?.addEventListener('click', ()=>{
+    document.getElementById('celebOverlay').style.display='none';
+  });
+
+  /* Play sound on tab switch */
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', ()=>Sound.play('click'));
+  });
 
   /* ============ GOOGLE SHEETS SYNC ============ */
   const SHEET_ID = '1YEEyy4uSDRn8EwnVVwtJFGJ-mrmus3qcArsWZT0tSaU';
