@@ -518,26 +518,71 @@
     position:relative;z-index:2;
   }
 
-  /* HK neon sign marquee strip */
+  /* String light bulbs strip */
   .gate-hk-sign{
-    display:flex;gap:0;margin-bottom:1.5rem;overflow:hidden;
-    border-radius:8px;border:1px solid rgba(255,255,255,.15);
-    background:rgba(0,0,0,.5);
+    display:flex;align-items:flex-end;justify-content:center;
+    gap:0;margin-bottom:1.5rem;
+    padding:.5rem .75rem .75rem;
+    position:relative;
+    background:transparent;
+    border:none;
+  }
+  /* The wire */
+  .gate-hk-sign::before{
+    content:'';position:absolute;top:14px;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.25) 10%,rgba(255,255,255,.25) 90%,transparent);
+    z-index:0;
   }
   .hk-char{
-    flex:1;padding:.4rem .1rem;text-align:center;
-    font-family:'Noto Sans HK','Geist',sans-serif;
-    font-weight:900;font-size:1rem;
-    animation:neonFlicker 3s ease-in-out infinite;
+    display:flex;flex-direction:column;align-items:center;
+    gap:0;flex:1;max-width:44px;position:relative;z-index:1;
   }
-  .hk-char:nth-child(1){color:var(--neon-r);text-shadow:0 0 8px var(--neon-r),0 0 20px var(--neon-r);animation-delay:0s}
-  .hk-char:nth-child(2){color:var(--neon-o);text-shadow:0 0 8px var(--neon-o),0 0 20px var(--neon-o);animation-delay:.2s}
-  .hk-char:nth-child(3){color:var(--neon-y);text-shadow:0 0 8px var(--neon-y),0 0 20px var(--neon-y);animation-delay:.4s}
-  .hk-char:nth-child(4){color:var(--neon-g);text-shadow:0 0 8px var(--neon-g),0 0 20px var(--neon-g);animation-delay:.6s}
-  .hk-char:nth-child(5){color:var(--neon-b);text-shadow:0 0 8px var(--neon-b),0 0 20px var(--neon-b);animation-delay:.8s}
-  .hk-char:nth-child(6){color:var(--neon-p);text-shadow:0 0 8px var(--neon-p),0 0 20px var(--neon-p);animation-delay:1s}
-  .hk-char:nth-child(7){color:var(--neon-c);text-shadow:0 0 8px var(--neon-c),0 0 20px var(--neon-c);animation-delay:1.2s}
-  .hk-char:nth-child(8){color:var(--neon-r);text-shadow:0 0 8px var(--neon-r),0 0 20px var(--neon-r);animation-delay:1.4s}
+  /* Short wire from main cable down to bulb cap */
+  .hk-char::before{
+    content:'';display:block;width:2px;height:10px;
+    background:rgba(255,255,255,.3);
+    border-radius:1px;
+  }
+  /* The bulb itself */
+  .hk-char::after{
+    content:'';display:block;
+    width:22px;height:26px;
+    border-radius:50% 50% 45% 45%;
+    border:2px solid rgba(255,255,255,.25);
+    animation:bulbPulse 1.8s ease-in-out infinite;
+    position:relative;
+  }
+  /* Bulb base cap — tiny rect at top of bulb */
+  .hk-char span{
+    display:block;width:10px;height:5px;
+    border-radius:2px 2px 0 0;
+    background:rgba(255,255,255,.3);
+    margin-top:-3px;
+    position:relative;z-index:2;
+    order:-1;
+  }
+
+  /* Each bulb gets its colour */
+  .hk-char:nth-child(1)::after{background:var(--neon-r);box-shadow:0 0 10px 4px var(--neon-r),0 0 30px 8px rgba(255,45,85,.4);animation-delay:0s}
+  .hk-char:nth-child(2)::after{background:var(--neon-o);box-shadow:0 0 10px 4px var(--neon-o),0 0 30px 8px rgba(255,159,10,.4);animation-delay:.25s}
+  .hk-char:nth-child(3)::after{background:var(--neon-y);box-shadow:0 0 10px 4px var(--neon-y),0 0 30px 8px rgba(255,214,10,.4);animation-delay:.5s}
+  .hk-char:nth-child(4)::after{background:var(--neon-g);box-shadow:0 0 10px 4px var(--neon-g),0 0 30px 8px rgba(48,209,88,.4);animation-delay:.75s}
+  .hk-char:nth-child(5)::after{background:var(--neon-b);box-shadow:0 0 10px 4px var(--neon-b),0 0 30px 8px rgba(10,132,255,.4);animation-delay:1s}
+  .hk-char:nth-child(6)::after{background:var(--neon-p);box-shadow:0 0 10px 4px var(--neon-p),0 0 30px 8px rgba(191,90,242,.4);animation-delay:1.25s}
+  .hk-char:nth-child(7)::after{background:var(--neon-c);box-shadow:0 0 10px 4px var(--neon-c),0 0 30px 8px rgba(90,200,250,.4);animation-delay:1.5s}
+  .hk-char:nth-child(8)::after{background:var(--neon-r);box-shadow:0 0 10px 4px var(--neon-r),0 0 30px 8px rgba(255,45,85,.4);animation-delay:1.75s}
+  .hk-char:nth-child(9)::after{background:var(--neon-o);box-shadow:0 0 10px 4px var(--neon-o),0 0 30px 8px rgba(255,159,10,.4);animation-delay:2s}
+  .hk-char:nth-child(10)::after{background:var(--neon-y);box-shadow:0 0 10px 4px var(--neon-y),0 0 30px 8px rgba(255,214,10,.4);animation-delay:2.25s}
+  .hk-char:nth-child(11)::after{background:var(--neon-g);box-shadow:0 0 10px 4px var(--neon-g),0 0 30px 8px rgba(48,209,88,.4);animation-delay:2.5s}
+  .hk-char:nth-child(12)::after{background:var(--neon-p);box-shadow:0 0 10px 4px var(--neon-p),0 0 30px 8px rgba(191,90,242,.4);animation-delay:2.75s}
+
+  @keyframes bulbPulse{
+    0%,100%{opacity:1;transform:scale(1)}
+    45%{opacity:.15;transform:scale(.88)}
+    50%{opacity:1;transform:scale(1)}
+    70%{opacity:.5;transform:scale(.93)}
+    75%{opacity:1;transform:scale(1)}
+  }
 
   @keyframes neonFlicker{
     0%,100%{opacity:1}
@@ -643,67 +688,113 @@
   }
 
   /* Glass cards */
+  /* ===== BRIGHT WHITE CARDS — easy to read ===== */
   .card{
-    background:rgba(255,255,255,.06) !important;
-    backdrop-filter:blur(16px) !important;-webkit-backdrop-filter:blur(16px) !important;
-    border:1px solid rgba(255,255,255,.12) !important;
-    box-shadow:0 4px 24px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.08) !important;
+    background:#ffffff !important;
+    backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+    border:1px solid rgba(255,255,255,.9) !important;
+    box-shadow:0 4px 24px rgba(0,0,0,.25),0 1px 0 rgba(255,255,255,.5) !important;
   }
-  .card-title{color:#fff !important}
-  .field-name{color:rgba(255,255,255,.85) !important}
+  .card-title{color:#1a1a2e !important}
+  .field-name{color:#1e2a4a !important;font-weight:600 !important}
   .field-input{
-    background:rgba(0,0,0,.3) !important;
-    border-color:rgba(255,255,255,.15) !important;
-    color:#fff !important;
+    background:#f8f9fb !important;
+    border-color:#d0d8e8 !important;
+    color:#1a1a2e !important;
   }
   .field-input:focus{
-    border-color:var(--neon-y) !important;
-    box-shadow:0 0 0 3px rgba(255,214,10,.15) !important;
+    border-color:var(--neon-o) !important;
+    box-shadow:0 0 0 3px rgba(255,159,10,.2) !important;
+    background:#fff !important;
   }
+  .field-note{color:#6b7a99 !important}
+  .field-tag{background:#f0f3fa !important;color:#6b7a99 !important;border-color:#d0d8e8 !important}
 
-  /* Summary glass */
+  /* Summary — white */
   .sum{
-    background:rgba(28,37,65,.5) !important;
-    backdrop-filter:blur(20px) !important;-webkit-backdrop-filter:blur(20px) !important;
-    border:1px solid rgba(255,255,255,.1) !important;
+    background:#ffffff !important;
+    backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+    border:1px solid #e2e8f4 !important;
+    box-shadow:0 2px 12px rgba(0,0,0,.15) !important;
   }
+  .sum-cell{background:#f5f7fc !important;border-color:#e2e8f4 !important}
+  .sum-cell-lbl{color:#6b7a99 !important}
+  .sum-cell-val{color:#1a1a2e !important}
 
-  /* Result panel glass */
+  /* Result panel — white with orange accent */
   .res{
-    background:rgba(10,10,30,.6) !important;
-    backdrop-filter:blur(20px) !important;-webkit-backdrop-filter:blur(20px) !important;
-    border:1px solid rgba(249,115,22,.3) !important;
+    background:#ffffff !important;
+    backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+    border:1px solid rgba(249,115,22,.25) !important;
+    box-shadow:0 4px 24px rgba(0,0,0,.2) !important;
   }
+  .res-eyebrow{color:var(--neon-o) !important}
+  .res-title{color:#1a1a2e !important}
+  .res-formula{color:#6b7a99 !important}
+  .res-tag{color:#4a5568 !important}
+  .res-head{border-color:#e2e8f4 !important}
+  .res-cell{background:#f8f9fb !important;border:1px solid #e2e8f4 !important;color:#1a1a2e !important}
+  .res-cell.hl{border-color:rgba(249,115,22,.4) !important;background:rgba(249,115,22,.05) !important;box-shadow:0 0 12px rgba(249,115,22,.12) !important}
+
+  /* Sub totals — light */
+  .sub{
+    background:#f5f7fc !important;
+    border:1px solid #e2e8f4 !important;
+  }
+  .sub-lbl{color:#4a5568 !important}
+
+  /* OC rows */
+  .oc-row{background:#f8f9fb !important;border-color:#e2e8f4 !important}
+  .oc-lbl{color:#1e2a4a !important}
+  .oc-formula{color:#8a9bb8 !important}
 
   /* Tab nav glass */
   .tabs{
-    background:rgba(255,255,255,.04);
+    background:rgba(255,255,255,.08);
     backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
     border-radius:12px;padding:.25rem;margin-bottom:1.5rem;
   }
-  .tab{color:rgba(255,255,255,.45) !important;border-radius:8px !important}
-  .tab:hover{color:rgba(255,255,255,.8) !important;background:rgba(255,255,255,.06) !important}
+  .tab{color:rgba(255,255,255,.5) !important;border-radius:8px !important}
+  .tab:hover{color:rgba(255,255,255,.85) !important;background:rgba(255,255,255,.08) !important}
   .tab.active{
     color:#ffd60a !important;
-    background:rgba(255,214,10,.12) !important;
+    background:rgba(255,214,10,.15) !important;
     border-color:transparent !important;
     box-shadow:0 0 12px rgba(255,214,10,.15) !important;
   }
 
-  /* Input / select glass */
+  /* Input / select inside panels — white */
   .input{
-    background:rgba(0,0,0,.3) !important;
-    border-color:rgba(255,255,255,.15) !important;
-    color:#fff !important;
+    background:#f8f9fb !important;
+    border-color:#d0d8e8 !important;
+    color:#1a1a2e !important;
   }
-  .input:focus{border-color:var(--neon-y) !important}
+  .input:focus{border-color:var(--neon-o) !important;box-shadow:0 0 0 3px rgba(255,159,10,.15) !important}
+  select.input option{background:#fff;color:#1a1a2e}
 
-  /* Sub totals */
-  .sub{
-    background:rgba(28,37,65,.7) !important;
-    border:1px solid rgba(255,255,255,.1) !important;
-  }
+  /* Other inner elements — readable on white */
+  .adj{background:#f5f7fc !important}
+  .item-x{background:#f0f3fa !important;border-color:#d0d8e8 !important;color:#6b7a99 !important}
+  .btn-add{background:#fff !important;border-color:rgba(255,159,10,.4) !important;color:rgba(200,100,0,.9) !important}
+  .btn-add:hover{background:rgba(255,159,10,.08) !important;border-color:var(--neon-o) !important;border-style:solid !important}
+  .mode-info{color:#6b7a99 !important}
+  .mode-bar{border-color:#e2e8f4 !important}
+  .cat-title{color:#1a1a2e !important}
+  .cat{background:#fff !important;border:1px solid #e2e8f4 !important;box-shadow:0 2px 8px rgba(0,0,0,.08) !important}
+  .cat-item{background:#f5f7fc !important;border-color:#e2e8f4 !important;color:#2d3a56 !important}
+  .cat-item:hover{background:#eef1fa !important;color:#1a1a2e !important}
+  .pkg-card{background:#ffffff !important;border-color:#e2e8f4 !important;box-shadow:0 2px 8px rgba(0,0,0,.08) !important}
+  .pkg-title{color:#1a1a2e !important}
+  .status-name{color:#1a1a2e !important}
+  .code-row{background:#f8f9fb !important;border:1px solid #e2e8f4 !important}
+  .code-row:hover{background:#eef1fa !important;border-color:rgba(48,209,88,.3) !important;transform:translateY(-2px)}
+  #chopResults .code-row-name{color:#1a1a2e !important}
+  #chopResultInfo{color:#6b7a99 !important}
+  .check-intro-title{color:#fff !important}
+  .check-intro-sub{color:rgba(255,255,255,.55) !important}
+  .check-intro-eyebrow{color:var(--neon-o) !important}
+  .overlap-items .input-desc{color:#4a5568 !important}
 
   /* ===== CELEBRATION OVERLAY ===== */
   #celebOverlay{
@@ -769,6 +860,34 @@
   .neon-pill.o{background:rgba(255,159,10,.15);color:var(--neon-o);border:1px solid rgba(255,159,10,.4);animation-delay:.4s}
   .neon-pill.g{background:rgba(48,209,88,.15);color:var(--neon-g);border:1px solid rgba(48,209,88,.4);animation-delay:.8s}
   .neon-pill.b{background:rgba(10,132,255,.15);color:var(--neon-b);border:1px solid rgba(10,132,255,.4);animation-delay:1.2s}
+
+  /* Header mini bulbs row */
+  .header-bulbs{
+    display:flex;align-items:flex-end;gap:0;position:relative;margin-top:4px;
+  }
+  .header-bulbs::before{
+    content:'';position:absolute;top:5px;left:0;right:0;height:1.5px;
+    background:rgba(255,255,255,.2);z-index:0;
+  }
+  .hb{
+    display:flex;flex-direction:column;align-items:center;
+    position:relative;z-index:1;width:20px;
+  }
+  .hb::before{content:'';display:block;width:1.5px;height:6px;background:rgba(255,255,255,.3)}
+  .hb::after{
+    content:'';display:block;width:11px;height:13px;
+    border-radius:50% 50% 45% 45%;
+    border:1.5px solid rgba(255,255,255,.2);
+    animation:bulbPulse 1.8s ease-in-out infinite;
+  }
+  .hb-r::after{background:var(--neon-r);box-shadow:0 0 6px 2px var(--neon-r);animation-delay:0s}
+  .hb-o::after{background:var(--neon-o);box-shadow:0 0 6px 2px var(--neon-o);animation-delay:.25s}
+  .hb-y::after{background:var(--neon-y);box-shadow:0 0 6px 2px var(--neon-y);animation-delay:.5s}
+  .hb-g::after{background:var(--neon-g);box-shadow:0 0 6px 2px var(--neon-g);animation-delay:.75s}
+  .hb-b::after{background:var(--neon-b);box-shadow:0 0 6px 2px var(--neon-b);animation-delay:1s}
+  .hb-p::after{background:var(--neon-p);box-shadow:0 0 6px 2px var(--neon-p);animation-delay:1.25s}
+  .hb-c::after{background:var(--neon-c);box-shadow:0 0 6px 2px var(--neon-c);animation-delay:1.5s}
+  .hb-r2::after{background:var(--neon-r);box-shadow:0 0 6px 2px var(--neon-r);animation-delay:1.75s}
 
   /* HK neon sign bar on top of page */
   .hk-header-sign{
@@ -870,14 +989,18 @@
   <div id="discoParticles" style="position:absolute;inset:0;pointer-events:none;z-index:1"></div>
   <div class="gate-inner">
     <div class="gate-hk-sign">
-      <span class="hk-char">貸</span>
-      <span class="hk-char">款</span>
-      <span class="hk-char">資</span>
-      <span class="hk-char">格</span>
-      <span class="hk-char">計</span>
-      <span class="hk-char">算</span>
-      <span class="hk-char">器</span>
-      <span class="hk-char">★</span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
+      <span class="hk-char"></span>
     </div>
     <div class="gate-brand">AWARA</div>
     <div class="gate-sub">Loan Eligibility · Restricted Access</div>
@@ -907,11 +1030,15 @@
       <div>
         <div class="brand">AWARA</div>
         <div class="tagline">Loan Eligibility · Created by Wilson</div>
-        <div class="neon-strip">
-          <span class="neon-pill r">Loan</span>
-          <span class="neon-pill o">CEF</span>
-          <span class="neon-pill g">GLC</span>
-          <span class="neon-pill b">Koperasi</span>
+        <div class="header-bulbs">
+          <span class="hb hb-r"></span>
+          <span class="hb hb-o"></span>
+          <span class="hb hb-y"></span>
+          <span class="hb hb-g"></span>
+          <span class="hb hb-b"></span>
+          <span class="hb hb-p"></span>
+          <span class="hb hb-c"></span>
+          <span class="hb hb-r2"></span>
         </div>
       </div>
     </div>
@@ -1356,8 +1483,8 @@
   <div class="panel" id="panel-samplechop">
     <div class="check-intro">
       <div class="check-intro-eyebrow">TNL Sample Chop</div>
-      <div class="check-intro-title">Semak Senarai Chop</div>
-      <div class="check-intro-sub">Cari nama atau nombor chop dari rekod TNL</div>
+      <div class="check-intro-title">Semak Senarai Chop <span id="chopLiveBadge" style="display:none;font-size:.6rem;font-weight:700;background:rgba(48,209,88,.15);color:#30d158;border:1px solid rgba(48,209,88,.4);border-radius:20px;padding:.2rem .6rem;vertical-align:middle;letter-spacing:.1em">● LIVE</span></div>
+      <div class="check-intro-sub">Cari nama atau nombor chop · Data dari Google Sheet + rekod tempatan</div>
     </div>
 
     <div class="card" style="margin-bottom:1.25rem">
@@ -4716,6 +4843,7 @@
 
     input.addEventListener('input', renderChop);
     sheetFilter.addEventListener('change', renderChop);
+    window._renderChop = renderChop;
     renderChop();
   }
 
@@ -4901,11 +5029,12 @@
       '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(name);
 
     try {
-      const [allCSV, glcCSV, codeCSV, pkgCSV] = await Promise.all([
+      const [allCSV, glcCSV, codeCSV, pkgCSV, chopCSV] = await Promise.all([
         fetch(url('Allowance')).then(r => { if (!r.ok) throw new Error('Allowance HTTP '+r.status); return r.text(); }),
         fetch(url('GLC')).then(r => { if (!r.ok) throw new Error('GLC HTTP '+r.status); return r.text(); }),
         fetch(url('Koperasi')).then(r => { if (!r.ok) throw new Error('Koperasi HTTP '+r.status); return r.text(); }),
         fetch(url('Package')).then(r => { if (!r.ok) throw new Error('Package HTTP '+r.status); return r.text(); }),
+        fetch(url('chop')).then(r => r.ok ? r.text() : '').catch(() => ''),
       ]);
 
       // Parse Allowance
@@ -4941,7 +5070,32 @@
         return obj;
       }).filter(p => p.Title && p.Category);
 
-      // Sanity check (refuse to apply if data is suspiciously small)
+      // Parse Chop
+      if (chopCSV && chopCSV.trim()) {
+        const newChop = [];
+        csvParse(chopCSV).forEach(row => {
+          const chop = (row[0]||'').trim();
+          const nama = (row[1]||'').trim();
+          if (nama && nama.toLowerCase() !== 'nama' && nama.toLowerCase() !== 'name') {
+            newChop.push([chop, nama, (row[2]||'').trim(), (row[3]||'').trim()]);
+          }
+        });
+        if (newChop.length > 0) {
+          // Merge into CHOP_DATA under a live sheet key
+          CHOP_DATA['chop (live)'] = newChop;
+          // Show LIVE badge
+          const badge = document.getElementById('chopLiveBadge');
+          if (badge) badge.style.display = 'inline';
+          // Also update the sheet filter dropdown
+          const sel = document.getElementById('chopSheetFilter');
+          if (sel && !sel.querySelector('option[value="chop (live)"]')) {
+            const opt = document.createElement('option');
+            opt.value = 'chop (live)'; opt.textContent = 'Chop (Live Sheet)';
+            sel.insertBefore(opt, sel.querySelector('option[value=""]').nextSibling);
+          }
+          console.log('Chop live sync:', newChop.length, 'records');
+        }
+      }
       const aT = newAllow.approved.length + newAllow.case.length + newAllow.rejected.length;
       const gT = newGLC.coshare.length + newGLC.angkasa.length + newGLC.rejected.length;
       const cT = Object.keys(newCodes).length;
@@ -4977,8 +5131,10 @@
         });
       }
       if (window._renderPackages) window._renderPackages();
+      if (window._renderChop) window._renderChop();
 
-      setSyncStatus('synced', 'A:' + aT + ' G:' + gT + ' C:' + cT + ' P:' + newPkgs.length);
+      const chopT = (CHOP_DATA['chop (live)'] || []).length;
+      setSyncStatus('synced', 'A:' + aT + ' G:' + gT + ' C:' + cT + ' P:' + newPkgs.length + (chopT ? ' Chop:' + chopT : ''));
     } catch (err) {
       console.warn('Google Sheets sync failed:', err);
       setSyncStatus('offline', String(err));
